@@ -1,5 +1,5 @@
 
-![alt text](https://github.com/Pivotal-Data-Engineering/gemfire-azure/blob/master/icon_gemfire.png "Logo") 
+![alt text](https://github.com/Pivotal-Data-Engineering/gemfire-azure/blob/master/icon_gemfire1.png "Logo") 
 
 ##Pivotal Gemfire(Powered by Apache Geode) On Microsoft Azure.
 
