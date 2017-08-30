@@ -1,0 +1,54 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "artifactsBaseUrl": {
+      "value": "https://templocistorage.blob.core.windows.net/gpdb-managed-disks"
+    },
+    "location": {
+      "value": "eastus"
+    },
+	"clusterName" : {
+		"value": "gemfire_datafabric"
+	},
+    "pivotalNetworkToken": {
+      "value": "fake_token"
+    },
+    "clusterName": {
+      "value": "azgf9"
+    },
+    "adminUserName": {
+      "value": "azureuser"
+    },
+    "adminPassword": {
+      "value": "MSrocks@2015"
+    },
+    "authenticationType": {
+      "value": "password"
+    },
+    "adminPublicKey": {
+      "value": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA33ZL0CAtgACfDXcPLLfatbp/kcWEdS9yrOJXIqD+u4fdHF6M2t5BMY0Y86KNVfBAIV/gDalkzBuhcXMyR3zYmOZTLUnjzn1F+2kCG301pIfMAYsNz+Yu71041OJBOUOu3fv+PeCckzpWu/ckwRrdhNC4uH0kO08bnkpj52qzK1cMVAT54Gxz1P8Z1ogmOxlzePz6Q4/ascxJ0q3r2YGFmQT1vCx0Z3IaUYEn5xsJyoX0QsTkfGcWf4lwECNv8XWo2gbIZe4MOmZErxjTN3YFfLf18yz0i0UvocuhR/iTbm8ySaR6zuH0abcUXZ1r+coeHC8LQTke+Qg1oQBmRqcLcQ== azureuser@avclient0"
+    },
+	"resourceGroupName": {
+		"value": "GemfireDatafabricReaourceGrp"
+	},
+	"storageAccountType" : {
+		"value" : "Premium_LRS"
+	},
+    "vmType": {
+      "value": "Standard_DS14_v2"
+    },
+    "gemfireHostsCount": {
+      "value": 1
+    },
+	"gemfireLocatorsCount": {
+		"value": 1
+	},
+    "dataDiskCount": {
+      "value": 1
+    },
+    "dataDiskSizeGB": {
+      "value": 1023
+    }  
+  }
+}
