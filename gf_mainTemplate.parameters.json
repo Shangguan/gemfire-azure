@@ -18,10 +18,10 @@
       "value": "azgf9"
     },
     "adminUserName": {
-      "value": "azureuser"
+      "value": "gfadmin"
     },
     "adminPassword": {
-      "value": "MSrocks@2015"
+      "value": "Gfadmin1"
     },
     "authenticationType": {
       "value": "password"
@@ -41,14 +41,23 @@
     "gemfireHostsCount": {
       "value": 1
     },
-	"gemfireLocatorsCount": {
-		"value": 1
-	},
+    "gemfireLocatorsCount": {
+	"value": 1
+    },
     "dataDiskCount": {
       "value": 1
     },
     "dataDiskSizeGB": {
       "value": 1023
-    }  
+    },
+	"prepareDiskScript": {
+		"value": "https://gemfirestgacct01.blob.core.windows.net/scripts/prepare_data_disks.sh"		          
+	},
+	"initGemfireVMScript" : {
+		"value": "https://gemfirestgacct01.blob.core.windows.net/scripts/Init_GemfireVM.sh"		      
+	},
+	"gemfireVersion": {
+		"value": 9
+	}  
   }
 }

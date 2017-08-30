@@ -151,7 +151,25 @@
       "metadata": {
         "description": "The size of data disks in GB"
       }
-    }
+    },
+    "prepareDiskScript": {
+      "type": "string",
+      "metadata": {
+        "description": "format mount and create RAID 0 script"
+      }
+    },
+    "initGemfireVMScript": {
+      "type": "string",
+      "metadata": {
+        "description": "Perform initialization script for gemfire nodes"
+      }
+    },
+	"gemfireVersion": {
+		"type": "int",
+		"metadata": {
+			"description": "Gemfire version"
+		}
+	}	
   },
   "variables": {
     "apiVersions": {
@@ -267,7 +285,7 @@
     "gfVmSize": "[parameters('vmType')]",
     "gfNodesCount": "[parameters('gemfireHostsCount')]",
     "gfPublicIPName": "[concat(parameters('genericNamePrefix'), '-publicip')]",
-    "gfDNSName": "[concat(parameters('genericNamePrefix'), '-dns')]",
+    "gfDNSName": "[parameters('genericNamePrefix')]",
     "gfNodeName": "[concat(parameters('genericNamePrefix'), '-server') ]",
     "subnetName": "[concat(parameters('genericNamePrefix'), '-subnet') ]",
     "gfNetworkInterfaceName": "[concat(parameters('genericNamePrefix'), '-nic') ]",
@@ -275,7 +293,10 @@
     "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('gfvirtualNetworkName') ) ]",
     "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', variables('subnetName') ) ]",
     "gfstorageAccountName": "[concat('d',uniqueString(resourceGroup().id,'d'),parameters('clusterName'))]",
-    "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]"
+    "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
+    "VMInstallScriptUri": "[parameters('initGemfireVMScript')]",
+    "VMPrepareDisksUri": "[parameters('prepareDiskScript')]",
+	"startingPrivateAddressSuffix" : 5
   },
   "resources": [
     {
@@ -405,7 +426,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ concat(variables('gfDNSName'),'dn', copyIndex() )]"
+          "domainNameLabel": "[ concat(variables('gfNodeName'), copyIndex() )]"
         }
       }
     },
@@ -430,7 +451,7 @@
             "name": "[ concat( 'ipconfig-', copyIndex() ) ]",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[ concat('10.0.0.', add(copyIndex(), 5) ) ]",
+              "privateIPAddress": "[ concat('10.0.0.', add(copyIndex(), variables('startingPrivateAddressSuffix')) ) ]",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('gfPublicIPName'), copyIndex() ) )]"
               },
@@ -514,7 +535,32 @@
           ]
         }
       }
-    }
+    },
+	{
+	      "type": "Microsoft.Compute/virtualMachines/extensions",
+	      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+	      "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
+	      "location": "[resourceGroup().location]",
+	      "copy": {
+	        "name": "gfNodeNicLoop",
+	        "count": "[parameters('gemfireHostsCount')]"
+	      },
+	      "dependsOn": [
+	        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex())]"
+	      ],
+	      "properties": {
+	        "publisher": "Microsoft.OSTCExtensions",
+	        "type": "CustomScriptForLinux",
+	        "typeHandlerVersion": "1.2",
+	        "settings": {
+	          "fileUris": [
+	            "[variables('VMInstallScriptUri')]",
+	            "[variables('VMPrepareDisksUri')]"
+	          ],
+	          "commandToExecute": "[concat('sh Init_GemfireVM.sh',' ',parameters('adminUserName'),' ',parameters('location'),' ',parameters('gemfireVersion'),' ', '>> /home/', parameters('adminUserName'),'/initialize-masternode.log 2>&1')]"
+	        }
+	      }
+	    }
   ],
   "outputs": {}
 }
