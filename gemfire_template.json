@@ -32,6 +32,12 @@
         "description": "gemfire cluster name"
       }
     },
+    "gemfireVersion": {
+      "type": "int",
+      "metadata": {
+        "description": "Gemfire version"
+      }
+    },
     "adminUserName": {
       "type": "string",
       "metadata": {
@@ -55,7 +61,7 @@
         "description": "Admin password for the VMs"
       }
     },
-    "adminPublicKey": {
+    "adminSSHPublicKey": {
       "type": "securestring",
       "metadata": {
         "description": "Admin publickey for the VMs"
@@ -73,19 +79,12 @@
         "description": "Gemfire VM type"
       }
     },
-    "resourceGroupName": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique namespace for resource group to Gemfire provisioning"
-      }
-    },
-    "storageAccountPrefix": {
-      "type": "string",
-      "defaultValue": "gfDatafabricStrgAcct",
-      "metadata": {
-        "description": "Unique namespace for the Storage Account where the VM disks will be placed "
-      }
-    },
+	"resourceGroupName": {
+	    "type": "string",
+	    "metadata": {
+	      "description": "Unique namespace for resource group to Gemfire provisioning"
+	    }
+	},
     "storageAccountType": {
       "type": "string",
       "defaultValue": "Premium_LRS",
@@ -93,11 +92,53 @@
         "description": "The type of the Storage Account"
       }
     },
-    "genericNamePrefix": {
+    "networkInterfaceName": {
       "type": "string",
-      "defaultValue": "gfdatafabric",
+      "defaultValue": "gemfiredatafabric-nic",
       "metadata": {
-        "description": "DNS Label for the Public IP. Must be lowercase"
+        "description": "Unique name for NIC"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-vnet",
+      "metadata": {
+        "description": "Unique name for Virtual network"
+      }
+    },
+    "virtualNetworkAddressSpace": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Virtual Network Address Prefix (i.e. CIDR)"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-subnet",
+      "metadata": {
+        "description": "Unique name for subnet"
+      }
+    },
+    "subnetAddressSpace": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24",
+      "metadata": {
+        "description": "Subnet1 Address Space"
+      }
+    },
+    "subnetStartAddress": {
+      "type": "string",
+      "defaultValue": "10.0.1.4",
+      "metadata": {
+        "description": "Subnet1 Start Address"
+      }
+    },
+    "publicIpAddressName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-publicip",
+      "metadata": {
+        "description": "Unique name for publicip"
       }
     },
     "allowedIPAddressPrefix": {
@@ -119,9 +160,7 @@
         7,
         8,
         9,
-        10,
-        11,
-        12
+        10
       ],
       "metadata": {
         "description": "The number of virtual machines instances to provision for the Gemfire servers"
@@ -162,12 +201,6 @@
       "type": "string",
       "metadata": {
         "description": "Perform initialization script for gemfire nodes"
-      }
-    },
-    "gemfireVersion": {
-      "type": "int",
-      "metadata": {
-        "description": "Gemfire version"
       }
     }
   },
@@ -277,26 +310,21 @@
       }
     },
     "gfAvailabilitySetSettings": {
-      "name": "[concat(parameters('clusterName'),'-as-gf')]",
+      "name": "[concat(parameters('clusterName'),'-avs')]",
       "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(parameters('location'),' ',''))].maximumPlatformFaultDomainCount]",
       "updateDomainCount": "5",
       "managed": true
     },
     "gfVmSize": "[parameters('vmType')]",
     "gfNodesCount": "[parameters('gemfireHostsCount')]",
-    "gfPublicIPName": "[concat(parameters('genericNamePrefix'), '-publicip')]",
-    "gfDNSName": "[parameters('genericNamePrefix')]",
-    "gfNodeName": "[concat(parameters('genericNamePrefix'), '-server') ]",
-    "subnetName": "[concat(parameters('genericNamePrefix'), '-subnet') ]",
-    "gfNetworkInterfaceName": "[concat(parameters('genericNamePrefix'), '-nic') ]",
-    "gfvirtualNetworkName": "[concat(parameters('genericNamePrefix'), '-vnet') ]",
-    "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('gfvirtualNetworkName') ) ]",
-    "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', variables('subnetName') ) ]",
-    "gfstorageAccountName": "[concat('d',uniqueString(resourceGroup().id,'d'),parameters('clusterName'))]",
+    "gfNodeName": "[concat(parameters('clusterName'), '-server') ]",
+    "gfstorageAccountName": "[concat(parameters('clusterName'), 'stgact')]",
+    "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')) ]",
+    "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', parameters('subnetName')) ]",
     "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
     "VMInstallScriptUri": "[parameters('initGemfireVMScript')]",
     "VMPrepareDisksUri": "[parameters('prepareDiskScript')]",
-    "startingPrivateAddressSuffix": 5
+    "s1": "[split(parameters('subnetStartAddress'),'.')]"
   },
   "resources": [
     {
@@ -388,7 +416,7 @@
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
-      "name": "[ variables('gfvirtualNetworkName') ]",
+      "name": "[ parameters('virtualNetworkName')]",
       "apiVersion": "[variables('apiVersions').network.virtualNetworks]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -401,14 +429,17 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "10.0.0.0/16"
+            "[ parameters('virtualNetworkAddressSpace') ]"
           ]
         },
         "subnets": [
           {
-            "name": "[ variables('subnetName') ]",
+            "name": "[ parameters('subnetName')]",
             "properties": {
-              "addressPrefix": "10.0.0.0/24"
+              "addressPrefix": "[parameters('subnetAddressSpace')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('gfSecurityGroupName'))]"
+              }
             }
           }
         ]
@@ -416,7 +447,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[ concat( variables('gfPublicIPName'), copyIndex() ) ]",
+      "name": "[ concat( parameters('publicIpAddressName'), copyIndex() ) ]",
       "apiVersion": "[variables('apiVersions').network.publicIPAddresses]",
       "location": "[ resourceGroup().location ]",
       "copy": {
@@ -432,11 +463,11 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('gfNetworkInterfaceName'), copyIndex())]",
+      "name": "[concat(parameters('networkInterfaceName'), copyIndex())]",
       "apiVersion": "[variables('apiVersions').network.networkInterfaces]",
       "location": "[ resourceGroup().location ]",
       "dependsOn": [
-        "[concat ('Microsoft.Network/virtualNetworks/', variables('gfvirtualNetworkName') )]"
+        "[concat ('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
       ],
       "copy": {
         "name": "gfNodesNicsCopy",
@@ -451,9 +482,9 @@
             "name": "[ concat( 'ipconfig-', copyIndex() ) ]",
             "properties": {
               "privateIPAllocationMethod": "Static",
-              "privateIPAddress": "[ concat('10.0.0.', add(copyIndex(), variables('startingPrivateAddressSuffix')) ) ]",
+              "privateIPAddress": "[ concat(variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.', string( add (int(variables('s1')[3]), copyIndex()) ) )]",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('gfPublicIPName'), copyIndex() ) )]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('publicIpAddressName'), copyIndex() ) )]"
               },
               "subnet": {
                 "id": "[variables('gfsubnetRef')]"
@@ -472,7 +503,7 @@
       "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('gfNetworkInterfaceName'), copyIndex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), copyIndex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
       ],
       "copy": {
@@ -493,7 +524,7 @@
               "publicKeys": [
                 {
                   "path": "[concat('/home/', parameters('adminUserName'), '/.ssh/authorized_keys')]",
-                  "keyData": "[parameters('adminPublicKey')]"
+                  "keyData": "[parameters('adminSSHPublicKey')]"
                 }
               ]
             }
@@ -534,7 +565,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('gfNetworkInterfaceName'), copyIndex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'), copyIndex()))]"
             }
           ]
         }
