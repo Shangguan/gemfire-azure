@@ -39,13 +39,13 @@
       "value": "Standard_DS14_v2"
     },
     "gemfireHostsCount": {
-      "value": 1
+      "value": 3
     },
     "gemfireLocatorsCount": {
-	"value": 1
+	"value": 2
     },
     "dataDiskCount": {
-      "value": 1
+      "value": 2
     },
     "dataDiskSizeGB": {
       "value": 1023

@@ -164,12 +164,12 @@
         "description": "Perform initialization script for gemfire nodes"
       }
     },
-	"gemfireVersion": {
-		"type": "int",
-		"metadata": {
-			"description": "Gemfire version"
-		}
-	}	
+    "gemfireVersion": {
+      "type": "int",
+      "metadata": {
+        "description": "Gemfire version"
+      }
+    }
   },
   "variables": {
     "apiVersions": {
@@ -296,7 +296,7 @@
     "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
     "VMInstallScriptUri": "[parameters('initGemfireVMScript')]",
     "VMPrepareDisksUri": "[parameters('prepareDiskScript')]",
-	"startingPrivateAddressSuffix" : 5
+    "startingPrivateAddressSuffix": 5
   },
   "resources": [
     {
@@ -321,7 +321,7 @@
       "apiVersion": "[variables('apiversions').compute.availabilitySets]",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('gfAvailabilitySetSettings').name]",
-     "location": "[resourceGroup().location]",
+      "location": "[resourceGroup().location]",
       "tags": {
         "provider": "[toUpper(parameters('pivotalTags').provider)]"
       },
@@ -514,16 +514,20 @@
               "storageAccountType": "[parameters('storageAccountType')]"
             }
           },
-          "dataDisks": [
+          "copy": [
             {
-                "name": "[concat(variables('gfNodeName'), copyIndex(),'-datadisk0')]",
-                "diskSizeGB": "[parameters('dataDiskSizeGB')]",
-                "lun": 0,
+              "name": "dataDisks",
+              "count": "[parameters('dataDiskCount')]",
+              "input": {
                 "caching": "None",
-                "createOption": "Empty",
+                "diskSizeGB": "[parameters('dataDiskSizeGB')]",
+                "lun": "[copyIndex('dataDisks')]",
+                "name": "[concat(variables('gfNodeName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
                 "managedDisk": {
                   "storageAccountType": "[parameters('storageAccountType')]"
-                }
+                },
+                "createOption": "Empty"
+              }
             }
           ]
         },
@@ -536,31 +540,31 @@
         }
       }
     },
-	{
-	      "type": "Microsoft.Compute/virtualMachines/extensions",
-	      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
-	      "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
-	      "location": "[resourceGroup().location]",
-	      "copy": {
-	        "name": "gfNodeNicLoop",
-	        "count": "[parameters('gemfireHostsCount')]"
-	      },
-	      "dependsOn": [
-	        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex())]"
-	      ],
-	      "properties": {
-	        "publisher": "Microsoft.OSTCExtensions",
-	        "type": "CustomScriptForLinux",
-	        "typeHandlerVersion": "1.2",
-	        "settings": {
-	          "fileUris": [
-	            "[variables('VMInstallScriptUri')]",
-	            "[variables('VMPrepareDisksUri')]"
-	          ],
-	          "commandToExecute": "[concat('sh Init_GemfireVM.sh',' ',parameters('adminUserName'),' ',parameters('location'),' ',parameters('gemfireVersion'),' ', '>> /home/', parameters('adminUserName'),'/initialize-masternode.log 2>&1')]"
-	        }
-	      }
-	    }
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+      "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "gfNodeNicLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [
+            "[variables('VMInstallScriptUri')]",
+            "[variables('VMPrepareDisksUri')]"
+          ],
+          "commandToExecute": "[concat('sh Init_GemfireVM.sh',' ',parameters('adminUserName'),' ',parameters('location'),' ',parameters('gemfireVersion'),' ', '>> /home/', parameters('adminUserName'),'/initialize-masternode.log 2>&1')]"
+        }
+      }
+    }
   ],
   "outputs": {}
 }
