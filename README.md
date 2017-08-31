@@ -1,6 +1,6 @@
 
 ![alt text](https://github.com/Pivotal-Data-Engineering/gemfire-azure/blob/master/icon_gemfire1.png "Logo") 
-## Pivotal Gemfire(Powered by Apache Geode) On Microsoft Azure.
+## Pivotal Gemfire On Microsoft Azure.
       
 ##### The repo provide automation for installing Pivotal Gemfire data fabric on Microsoft Azure cloud. Currently support gemfire 9.1.0 and 8.2.6 versions
 
