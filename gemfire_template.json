@@ -2,14 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "artifactsBaseUrl": {
-      "type": "string",
-      "defaultValue": "https://ameypivotal.blob.core.windows.net/gpdb-autodeploy",
-      "metadata": {
-        "description": "Base URL for artifacts such as nested templates and scripts",
-        "artifactsBaseUrl": ""
-      }
-    },
     "pivotalTags": {
       "type": "object",
       "defaultValue": {
@@ -19,34 +11,16 @@
         "description": "Provider tags"
       }
     },
-    "location": {
-      "type": "string",
-      "defaultValue": "westus",
-      "metadata": {
-        "description": "Deployment region location"
-      }
-    },
     "clusterName": {
       "type": "string",
       "metadata": {
-        "description": "gemfire cluster name"
+        "description": "gemfire cluster name, may only contains URL safe characters"
       }
     },
     "adminUserName": {
       "type": "string",
       "metadata": {
         "description": "Admin user name for the VMs"
-      }
-    },
-    "authenticationType": {
-      "type": "string",
-      "defaultValue": "password",
-      "allowedValues": [
-        "password",
-        "sshPublicKey"
-      ],
-      "metadata": {
-        "description": "Authentication type for the virtual machines"
       }
     },
     "adminPassword": {
@@ -73,12 +47,6 @@
         "description": "Gemfire VM type"
       }
     },
-    "resourceGroupName": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique namespace for resource group to Gemfire provisioning"
-      }
-    },
     "storageAccountPrefix": {
       "type": "string",
       "defaultValue": "gfDatafabricStrgAcct",
@@ -91,13 +59,6 @@
       "defaultValue": "Premium_LRS",
       "metadata": {
         "description": "The type of the Storage Account"
-      }
-    },
-    "genericNamePrefix": {
-      "type": "string",
-      "defaultValue": "gfdatafabric",
-      "metadata": {
-        "description": "DNS Label for the Public IP. Must be lowercase"
       }
     },
     "allowedIPAddressPrefix": {
@@ -276,20 +237,13 @@
         "maximumPlatformFaultDomainCount": 1
       }
     },
-    "gfAvailabilitySetSettings": {
-      "name": "[concat(parameters('clusterName'),'-as-gf')]",
-      "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(parameters('location'),' ',''))].maximumPlatformFaultDomainCount]",
-      "updateDomainCount": "5",
-      "managed": true
-    },
     "gfVmSize": "[parameters('vmType')]",
     "gfNodesCount": "[parameters('gemfireHostsCount')]",
-    "gfPublicIPName": "[concat(parameters('genericNamePrefix'), '-publicip')]",
-    "gfDNSName": "[parameters('genericNamePrefix')]",
-    "gfNodeName": "[concat(parameters('genericNamePrefix'), '-server') ]",
-    "subnetName": "[concat(parameters('genericNamePrefix'), '-subnet') ]",
-    "gfNetworkInterfaceName": "[concat(parameters('genericNamePrefix'), '-nic') ]",
-    "gfvirtualNetworkName": "[concat(parameters('genericNamePrefix'), '-vnet') ]",
+    "gfPublicIPName": "[concat(parameters('clusterName'), '-publicip')]",
+    "gfNodeName": "[concat(parameters('clusterName'), '-server') ]",
+    "subnetName": "[concat(parameters('clusterName'), '-subnet') ]",
+    "gfNetworkInterfaceName": "[concat(parameters('clusterName'), '-nic') ]",
+    "gfvirtualNetworkName": "[concat(parameters('clusterName'), '-vnet') ]",
     "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('gfvirtualNetworkName') ) ]",
     "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', variables('subnetName') ) ]",
     "gfstorageAccountName": "[concat('d',uniqueString(resourceGroup().id,'d'),parameters('clusterName'))]",
@@ -316,20 +270,6 @@
         "provider": "[toUpper(parameters('pivotalTags').provider)]"
       },
       "properties": {}
-    },
-    {
-      "apiVersion": "[variables('apiversions').compute.availabilitySets]",
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[variables('gfAvailabilitySetSettings').name]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "provider": "[toUpper(parameters('pivotalTags').provider)]"
-      },
-      "properties": {
-        "platformFaultDomainCount": "[variables('gfAvailabilitySetSettings').faultDomainCount]",
-        "platformUpdateDomainCount": "[variables('gfAvailabilitySetSettings').updateDomainCount]",
-        "managed": "[variables('gfAvailabilitySetSettings').managed]"
-      }
     },
     {
       "apiVersion": "[variables('apiVersions').network.networkSecurityGroups]",
@@ -426,7 +366,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ concat(variables('gfNodeName'), copyIndex() )]"
+          "domainNameLabel": "[ concat(variables('gfNodeName'), copyIndex(),subscription().displayName )]"
         }
       }
     },
