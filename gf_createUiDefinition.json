@@ -5,23 +5,14 @@
   "parameters": {
     "basics": [
       {
-        "name": "pivotalNetworkToken",
-        "type": "Microsoft.Common.TextBox",
-        "label": "Pivotal Network Token",
-        "toolTip": "Pivotal Network Account: If you do not already have an account, [create one at https://network.pivotal.io](https://network.pivotal.io/). You will need the API token located in your profile. Navigate to your name in the top right and select Edit Profile. The API token is located at the bottom of the page.",
-        "constraints": {
-          "required": true
-        }
-      },
-      {
         "name": "clusterName",
         "type": "Microsoft.Common.TextBox",
-        "label": "Cluster name (3-10 letters or numbers)",
+        "label": "Cluster name (3-12 letters or numbers)",
         "toolTip": "Cluster name will be used as prefix for most resources created for this cluster",
         "defaultValue": "gdatafabric",
         "constraints": {
           "required": true,
-          "regex": "^[a-z0-9]{3,10}$",
+          "regex": "^[a-z0-9]{3,12}$",
           "validationMessage": "Cluster name between 3 and 10 characters long and can contain only numbers and lowercase letters"
         }
       },
@@ -29,11 +20,11 @@
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "VM Admin Username",
-        "toolTip": "Username to use for SSH access to the virtual machines (do NOT use gfadmin for this username)",
+        "toolTip": "Username to use for SSH access to the virtual machines",
         "defaultValue": "gfadmin",
         "constraints": {
           "required": true,
-          "regex": "^((?!gfadmin).)*$",
+          "regex": "^[a-z0-9]{3,12}$"
           "validationMessage": "You cannot use username gfadmin for the primary SSH user. gfadmin user will be created automatically during deployment"
         },
         "osPlatform": "Linux"
@@ -263,14 +254,7 @@
       "locatorCount": "[steps('clusterConfig').locatorCount]",
       "vmSize": "[steps('clusterConfig').vmSize]",
       "dataDiskCount": "[steps('clusterConfig').dataDiskCount]",
-      "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]",
-      "virtualNetworkName": "[steps('networkConfig').virtualNetwork.name]",
-      "virtualNetworkAddressSpace": "[steps('networkConfig').virtualNetwork.addressPrefix]",
-      "subnetName": "[steps('networkConfig').virtualNetwork.subnets.subnet1.name]",
-      "subnetAddressSpace": "[steps('networkConfig').virtualNetwork.subnets.subnet1.addressPrefix]",
-      "subnetStartAddress": "[steps('networkConfig').virtualNetwork.subnets.subnet1.startAddress]",
-      "publicIPAddressName": "[steps('networkConfig').publicIP.name]",
-      "allowedIPAddressPrefix": "[steps('networkConfig').allowedIPAddressPrefix]"
+      "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]"
     }
   }
 }

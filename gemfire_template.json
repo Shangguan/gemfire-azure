@@ -67,12 +67,6 @@
         "description": "Admin publickey for the VMs"
       }
     },
-    "pivotalNetworkToken": {
-      "type": "string",
-      "metadata": {
-        "description": "Pivotal Network Account: If you do not already have an account, [create one at https://network.pivotal.io](https://network.pivotal.io/). You will need the API token located in your profile. Navigate to your name in the top right and select Edit Profile. The API token is located at the bottom of the page."
-      }
-    },
     "vmType": {
       "type": "string",
       "metadata": {
