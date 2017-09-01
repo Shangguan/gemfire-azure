@@ -10,9 +10,25 @@ clone the repo and run ./gf_deploy.sh
 ## Current State:
 The scrript read the configuration data from the paramters json file and provision the infrastructure and install jdk, pip, and gemfire software. 
  
+## Deploy template using Azure CLI
+
+Example:
+
+az account list
+
+az account set "PDE-spaladugu"
+
+az group create --location eastus --name "GemfireDatafabricRG"
+
+az group deployment create --resource-group "GemfireDatafabricRG" --name "datafabricTemplate" --template-file "gemfire_template.json" --parameters-file "gf_mainTemplate.parameters.json"
+
 ## In flight:
 1. Integrate with Azure UI
 2. Gemfire management scripting.
+
+
+
+
 
 
   Pivotal Gemfire is a licenced Trademark © 2017 Pivotal Software, Inc. All Rights Reserved.
