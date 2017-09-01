@@ -4,12 +4,9 @@
       
 ##### The repo provide automation for installing Pivotal Gemfire data fabric on Microsoft Azure cloud. Currently support gemfire 9.1.0 and 8.2.6 versions
 
-## Usage:
-clone the repo and run ./gf_deploy.sh
-
 ## Current State:
 The scrript read the configuration data from the paramters json file and provision the infrastructure and install jdk, pip, and gemfire software. 
- 
+
 ## Deploy template using Azure CLI
 
 Example:
