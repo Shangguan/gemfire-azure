@@ -11,13 +11,18 @@ The scrript read the configuration data from the paramters json file and provisi
 
 Example:
 
-az account list
 
-az account set "PDE-spaladugu"
+> az account list
 
-az group create --location eastus --name "GemfireDatafabricRG"
+> az account set "PDE-spaladugu"
 
-az group deployment create --resource-group "GemfireDatafabricRG" --name "datafabricTemplate" --template-file "gemfire_template.json" --parameters-file "gf_mainTemplate.parameters.json"
+> az group create --location eastus --name "GemfireDatafabricRG"
+
+> az group deployment create --resource-group "GemfireDatafabricRG" --name "datafabricTemplate" --template-file "gemfire_template.json" --parameters-file "gf_mainTemplate.parameters.json"
+
+Note: location and resource group names in the file gf_mainTemplate.parameters.json should match to what we used in step 3.
+
+
 
 ## In flight:
 1. Integrate with Azure UI
