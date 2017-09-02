@@ -5,9 +5,6 @@
     "adminUserName": {
       "value": "gfadmin"
     },
-    "adminPassword": {
-      "value": "Gfadmin1"
-    },
 	"storageAccountType" : {
 		"value" : "Premium_LRS"
 	},
