@@ -1,0 +1,260 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "clusterName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Cluster name (3-12 letters or numbers)",
+        "toolTip": "Cluster name will be used as prefix for most resources created for this cluster",
+        "defaultValue": "gdatafabric",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9]{3,12}$",
+          "validationMessage": "Cluster name between 3 and 10 characters long and can contain only numbers and lowercase letters"
+        }
+      },
+      {
+        "name": "adminUsername",
+        "type": "Microsoft.Compute.UserNameTextBox",
+        "label": "VM Admin Username",
+        "toolTip": "Username to use for SSH access to the virtual machines",
+        "defaultValue": "gfadmin",
+        "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9]{3,12}$"
+          "validationMessage": "You cannot use username gfadmin for the primary SSH user. gfadmin user will be created automatically during deployment"
+        },
+        "osPlatform": "Linux"
+      },
+      {
+        "name": "adminCredentials",
+        "type": "Microsoft.Compute.CredentialsCombo",
+        "label": {
+          "authenticationType": "Authentication Type",
+          "password": "Admin Password",
+          "confirmPassword": "Confirm Admin Password",
+          "sshPublicKey": "SSH Public Key"
+        },
+        "toolTip": {
+          "authenticationType": "Which authentication type to use when connecting to the virtual machines: Password or SSH Public Key",
+          "adminPassword": "Admin password for the virtual machines",
+          "adminPublicKey": "SSH public key that will be included on all nodes in the cluster. The OpenSSH public key can be generated with tools like ssh-keygen on Linux or OS X."
+        },
+        "constraints": {
+          "required": true
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+        "osPlatform": "Linux"
+      }
+    ],
+    "steps": [
+      {
+        "name": "clusterConfig",
+        "label": "Gemfire Config",
+        "subLabel": {
+          "preValidation": "Configure Gemfire",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Gemfire Settings",
+        "elements": [
+		  {
+			  "name": "gemfireVersion"
+              "type": "Microsoft.Common.DropDown",
+              "label": "Gemfire Version",
+              "defaultValue": "9",
+              "toolTip": "Gemfire base version to use. Installs the highest minor version of base selected.",
+              "constraints": {
+                "allowedValues": [
+                  {
+                    "label": "8",
+                    "value": 8
+                  },
+                  {
+                    "label": "9",
+                    "value": 9
+                  },
+			  ]
+		    }
+		  },
+          {
+            "name": "gemfireHostsCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Number of servers",
+            "defaultValue": "2",
+            "toolTip": "The number of virtual machines to provision for the servers in this cluster.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "2",
+                  "value": 2
+                },
+                {
+                  "label": "3",
+                  "value": 3
+                },
+                {
+                  "label": "4",
+                  "value": 4
+                },
+                {
+                  "label": "5",
+                  "value": 5
+                },
+                {
+                  "label": "6",
+                  "value": 6
+                }
+              ]
+            }
+          },
+          {
+            "name": "gemfireLocatorsCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Number of servers",
+            "defaultValue": "1",
+            "toolTip": "The number of locators run for the servers in this cluster.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "1",
+                  "value": 1
+                },
+                {
+                  "label": "2",
+                  "value": 2
+                }
+              ]
+            }
+          },
+          {
+            "name": "vmType",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "VM Size",
+            "toolTip": "Size of the virtual machine to use for all nodes.",
+            "recommendedSizes": [
+              "Standard_DS15_v2",
+              "Standard_DS14_v2",
+              "Standard_DS5_v2",
+              "Standard_GS5",
+              "Standard_GS4",
+              "Standard_GS3"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_DS15_v2",
+                "Standard_DS14_v2",
+                "Standard_DS13_v2",
+                "Standard_DS5_v2",
+                "Standard_DS4_v2",
+                "Standard_DS3_v2",
+                "Standard_GS5",
+                "Standard_GS4",
+                "Standard_GS3",
+                "Standard_GS2",
+                "Standard_DS14",
+                "Standard_DS13",
+                "Standard_DS4",
+                "Standard_DS3"
+              ]
+            },
+            "osPlatform": "Linux",
+            "count": "[add(add(steps('clusterConfig').segmentHostsCount),1)]"
+          },
+          {
+            "name": "dataDiskCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Data disks per node",
+            "defaultValue": "1",
+            "toolTip": "The number of data disks to attach to each gemfire host in this cluster.",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "1",
+                  "value": 1
+                },
+                {
+                  "label": "2",
+                  "value": 2
+                },
+                {
+                  "label": "3",
+                  "value": 3
+                },
+                {
+                  "label": "4",
+                  "value": 4
+                },
+                {
+                  "label": "5",
+                  "value": 5
+                },
+                {
+                  "label": "6",
+                  "value": 6
+                },
+                {
+                  "label": "7",
+                  "value": 7
+                },
+                {
+                  "label": "8",
+                  "value": 8
+                },
+                {
+                  "label": "9",
+                  "value": 9
+                },
+                {
+                  "label": "10",
+                  "value": 10
+                }
+              ]
+            }
+          },
+          {
+            "name": "dataDiskSizeGB",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Data disk size",
+            "defaultValue": "1024 GB",
+            "toolTip": "The size of the data disks attached to each segment host in this cluster. The performance of the data disk depends on its size [learn more](https://docs.microsoft.com/en-us/azure/storage/storage-premium-storage#scalability-and-performance-targets)",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "128 GB",
+                  "value": 128
+                },
+                {
+                  "label": "512 GB",
+                  "value": 512
+                },
+                {
+                  "label": "1024 GB",
+                  "value": 1023
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+      "pivotalNetworkToken": "[basics('pivotalNetworkToken')]",
+      "clusterName": "[basics('clusterName')]",
+      "adminUsername": "[basics('adminUsername')]",
+      "adminPassword": "[basics('adminCredentials').password]",
+      "adminSSHPublicKey": "[basics('adminCredentials').sshPublicKey]",
+      "authenticationType": "[basics('adminCredentials').authenticationType]",
+      "gpadminPassword": "[steps('clusterConfig').gpadminPassword]",
+      "locatorCount": "[steps('clusterConfig').locatorCount]",
+      "vmSize": "[steps('clusterConfig').vmSize]",
+      "dataDiskCount": "[steps('clusterConfig').dataDiskCount]",
+      "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]"
+    }
+  }
+}

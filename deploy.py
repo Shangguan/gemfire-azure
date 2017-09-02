@@ -44,7 +44,7 @@ def parseArgs():
     allgroup.add_argument('--use-resource-group', help='The name of an existing resource group in which to deploy the GemFire cluster.')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
     allgroup.add_argument('--location', help='The Azure region where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
-    allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = True,help='The path to a file containing the public half of the ssh key you will use to access the servers.')
+    allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = True,help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
 
@@ -100,6 +100,26 @@ def resource_group_exists(rgname):
 def create_resource_group(name, location):
     azrun('group create --name {0} --location {1}'.format(name, location))
 
+def read_key_file(filehandle):
+    """
+    If the filehandle.name ends with .pub, ssh-keygen will be invoked to convert it
+    to .pem format.  filehandle will be closed.
+    """
+    filename = filehandle.name
+    if filename.endswith('.pub'):
+        filehandle.close()
+        sshkeygen = subprocess.Popen(['ssh-keygen','-f',filename, '-e','-m','pem'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+        out, err = sshkeygen.communicate()
+        if sshkeygen.returncode != 0:
+            sys.exit('An error occurred while reading the key file ({0}) : {1}'.format(sshkeygen.returncode, out))
+        else:
+            sshkey = out
+    else:
+        sshkey = filehandle.read(16384)
+        filehandle.close
+
+    return sshkey
+
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(sys.argv[0]))
 
@@ -125,18 +145,12 @@ if __name__ == '__main__':
 
     # compose the az command
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
-    overrides = overrides + ['adminPublicKey="{0}"'.format(sshkey)]
+    overrides = overrides + ['adminSSHPublicKey={0}'.format(sshkey)]
     if args.datanode_count is not None:
         overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count)]
 
     if args.locator_count is not None:
         overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
-    # overrides = overrides + ['--parameters', 'adminPublicKey="{0}"'.format(sshkey)]
-    # if args.datanode_count is not None:
-    #     overrides = overrides + [' --parameters','gemfireHostsCount={0}'.format(args.datanode_count)]
-    #
-    # if args.locator_count is not None:
-    #     overrides = overrides + ['--parameters', 'gemfireLocatorsCount={0}'.format(args.locator_count)]
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'gemfire_template.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'default_parameters.json')] + overrides)

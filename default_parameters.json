@@ -2,17 +2,11 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-   "pivotalNetworkToken": {
-      "value": "fake_token"
-    },
     "adminUserName": {
       "value": "gfadmin"
     },
     "adminPassword": {
       "value": "Gfadmin1"
-    },
-    "adminPublicKey": {
-      "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDRfSi/IqWubxD3ZDIEKw4MnvZzcVFOR18d16t5O48WCue2Z3vrY8dzr/NAa72PrldvQD8yhAT7eieM3Ldo3MOKP74GPtm+L6+A3v4UO2QTjpo+TkusCWcoj4towFA3lSduwUMCyUEMC/L4ots55Uutrm2H6eBYw5Ci5GYJnj4aTc5eHEFebBNMbSgmofXLBmBWgqfj6vEx26idEmshopkH8BIMPhyZN4WBYRHyG9qWNIjjqqknnOVMYms3vrmjMVE9XnsagkWVd1W1q3aseypLaEPjNRVZCFfAnZbi6IXfID8j963fgO9oaAQtmAvhCYqZNu963Yl+8dARh/yh4BVr"
     },
 	"storageAccountType" : {
 		"value" : "Premium_LRS"
@@ -40,6 +34,26 @@
 	},
 	"gemfireVersion": {
 		"value": 9
-	}
+	},
+	"networkInterfaceName": {
+		"value": "gemfiredatafabric-nic"
+	},
+	"virtualNetworkName": {
+		"value": "gemfiredatafabric-vnet"
+	},
+	"virtualNetworkAddressSpace": {
+		"value": "10.0.0.0/16"
+	},
+	"subnetName": {
+		"value": "gemfiredatafabric-subnet"
+	},
+    "subnetAddressSpace": {
+      "value": "10.0.1.0/24"
+    },
+    "subnetStartAddress": {
+     "Value": "10.0.1.4"      }
+    },
+	"publicIpAddressName": {
+		"value": "gemfiredatafabric-publicip"
   }
 }
