@@ -38,6 +38,22 @@ and the bootstrap will run providing a realistic simulation of the Azure
 environment.  To re-run the setup scripts without re-provisioning the virtual
 machines, run 'vagrant reload --provision'.
 
+## Testing
+Once the vms are provisioned, the remainder of the cluster initialization
+process is handled by downloading a copy of this repository from github and
+running the scripts in the _init\_scripts_ folder.
+
+The _deploy.py_ script takes an optional --gemfire-azure-version parameter
+that controls which version of the repository will be used.
+
+To test,before curring a release, use the following procedure:
+* commit your changes and git push them to github
+* deploy using the _deploy.py_ script, pass the name of your current branch
+(see example below)
+
+```
+python ./deploy.py --create-resource-group MyTestGroup --location eastus2  --public-ssh-key-file ./azuredev.pub   --datanode-count 2 --cluster-name gemdev1 --gemfire-azure-version mybranch
+```
 
 _Pivotal Gemfire is a licenced Trademark © 2017 Pivotal Software, Inc. All Rights Reserved._
 _Microsoft Azure is a licenced trademark of © 2017 Microsoft corporation. All Rights Reserved._
