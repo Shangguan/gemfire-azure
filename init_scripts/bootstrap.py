@@ -80,7 +80,22 @@ if __name__ == "__main__":
             log.write(logmsg('bootstrap started'))
             environment = parse_env_args(args.environment)
             validate_env(environment, log)
-            setup_git(environment['GEMFIRE_USER'],args.git_branch,log)
+            gemuser = environment['GEMFIRE_USER']
+
+            setup_git(gemuser,args.git_branch,log)
+            scripts = os.listdir('/home/{0}/gemfire-azure/init_scripts'.format(gemuser))
+            scripts.sort()
+            for script in scripts:
+                if script == 'bootstrap.py':
+                    continue
+
+                if script.endswith('.py'):
+                    interpreter = 'python'
+                elif script.endswith('.sh'):
+                    interpreter = 'sh'
+
+                log.write(logmsg('running {0}'.format(script)))
+                run('{2} /home/{0}/gemfire-azure/init_scripts/{1}'.format(gemuser,script, interpreter), log)
 
         except Exception as x:
             log.write(logmsg('An unexpected exception interrupted the bootstrap.\n' + str(x)))

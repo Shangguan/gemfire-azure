@@ -1,11 +1,14 @@
 #!/bin/sh
-ADMINUSER=$1
-REGION_NAME=$2
-GEMFIRE_VERSION=$3
+#
+# This script expects the following environment variables
+#
+# GEMFIRE_USER  the user that will run the GemFire processes
+# REGION_NAME   the azure region where this cluster is running (becomes part of the host name)
+# GEMFIRE_VERSION either 8 or 9
 
 echo "applying sudo rules........"
 sed -i 's/Defaults\s\{1,\}requiretty/Defaults \!requiretty/g' /etc/sudoers
-echo "$ADMINUSER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+echo "$GEMFIRE_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 echo "disabling selinux ......"
 setenforce 0
@@ -38,17 +41,13 @@ echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
 echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
 systemctl restart sshd
 
-echo "Peparing Disks.... "
-chmod ugo+rx prepare_data_disks.sh
-sh prepare_data_disks.sh
-
 echo "enabling epel repo....."
 yum install -y epel-release
 echo "install python-pip ......"
 yum -y install python-pip
 echo "install python jinja2 ..."
 pip install jinja2
- 
+
 echo "installing jdk....."
 wget https://gemfirestgacct01.blob.core.windows.net/binaries/jdk-8u144-linux-x64.rpm
 yum localinstall -y jdk-8u144-linux-x64.rpm
@@ -60,21 +59,21 @@ then
         tar -xvf Pivotal_GemFire_826_b41_Linux.tar.gz
 		mv Pivotal_GemFire_826_b41_Linux /usr/local/
 		ln -s /usr/local/Pivotal_GemFire_826_b41_Linux/ /usr/local/gemfire
-		chown -R $ADMINUSER:$ADMINUSER /usr/local/gemfire
+		chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 elif [ "$GEMFIRE_VERSION" == 9 ]
 then
         wget https://gemfirestgacct01.blob.core.windows.net/binaries/pivotal-gemfire-9.1.0.tar.gz
         tar -xvf pivotal-gemfire-9.1.0.tar.gz
 		mv pivotal-gemfire-9.1.0 /usr/local/
 		ln -s /usr/local/pivotal-gemfire-9.1.0/ /usr/local/gemfire
-		chown -R $ADMINUSER:$ADMINUSER /usr/local/gemfire
+		chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 else
         echo "Did not understood the version, not installing Gemfire ....."
 fi
-		
-echo "export JAVA_HOME=/usr/java/jdk1.8.0_144" >> /home/$ADMINUSER/.bashrc
-echo "export GEMFIRE_HOME=/usr/local/gemfire" >> /home/$ADMINUSER/.bashrc
-echo "export PATH=$JAVA_HOME/bin:$GEMFIRE_HOME/bin:$PATH" >> /home/$ADMINUSER/.bashrc
 
-		
-echo "Finished executing the Init_HdpVM."
+echo "export JAVA_HOME=/usr/java/jdk1.8.0_144" >> /home/$GEMFIRE_USER/.bashrc
+echo "export GEMFIRE_HOME=/usr/local/gemfire" >> /home/$GEMFIRE_USER/.bashrc
+echo "export PATH=$JAVA_HOME/bin:$GEMFIRE_HOME/bin:$PATH" >> /home/$GEMFIRE_USER/.bashrc
+
+
+echo "Finished executing 04_init_vms.sh"

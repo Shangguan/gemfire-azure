@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# This script required no environment variables
+#
 drives=($(ls -1 /dev/sd*|grep -E -v "[0-9]$"| grep -E -v "sda" | grep -E -v "sdb"))
 count=1
 fs_type=83
