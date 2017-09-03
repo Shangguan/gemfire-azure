@@ -73,8 +73,8 @@ else
 fi
 
 echo "export JAVA_HOME=/usr/java/jdk1.8.0_144" >> /home/$GEMFIRE_USER/.bashrc
-echo "export GEMFIRE_HOME=/usr/local/gemfire" >> /home/$GEMFIRE_USER/.bashrc
-echo "export PATH=$JAVA_HOME/bin:$GEMFIRE_HOME/bin:$PATH" >> /home/$GEMFIRE_USER/.bashrc
+echo "export GEMFIRE=/usr/local/gemfire" >> /home/$GEMFIRE_USER/.bashrc
+echo "export PATH='$JAVA_HOME/bin:$GEMFIRE/bin:$PATH'" >> /home/$GEMFIRE_USER/.bashrc
 
 
 echo "Finished executing 04_init_vms.sh"
