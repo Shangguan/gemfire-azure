@@ -17,6 +17,12 @@
         "description": "gemfire cluster name, may only contains URL safe characters"
       }
     },
+    "azureGemFireVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "The version of the azure-gemfire project to deploy (optional, defaults to latest release)"
+      }
+    },
     "gemfireVersion": {
       "type": "int",
       "metadata": {
@@ -39,6 +45,12 @@
       "type": "string",
       "metadata": {
         "description": "Gemfire VM type"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Amount of memory (in G) on the selected vmType"
       }
     },
     "storageAccountType": {
@@ -530,9 +542,9 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/master/init_scripts/bootstrap.py"
+            "concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')"
           ],
-          "commandToExecute": "python bootstrap.py"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' AZ_SUBSCRIPTION=', subscription().displayName, ' VM_SIZE=',parameters('vmSize'))]"
         }
       }
     }

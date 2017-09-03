@@ -37,6 +37,23 @@ azureregions = [
   "westus2"
 ]
 
+def detect_git_branch():
+    """
+    returns 'master' in the event of any failure
+    """
+    process = subprocess.Popen(['git','branch'], stdout=subprocess.PIPE, stderr = subprocess.STDOUT)
+    out, err = process.communicate()
+    if process.returncode != 0:
+        return master
+
+    for line in out.splitlines():
+        if '*' in line:
+            words = line.split()
+            if len(words) == 2:
+                return words[1]
+
+    return 'master'
+
 def parseArgs():
     parser = argparse.ArgumentParser(description = 'This script deploys a GemFire cluster on Azure')
     allgroup = parser.add_argument_group('arguments')
@@ -121,6 +138,7 @@ def read_key_file(filehandle):
 
     return sshkey
 
+
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(sys.argv[0]))
 
@@ -147,11 +165,14 @@ if __name__ == '__main__':
     # compose the az command
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
     overrides = overrides + ['adminSSHPublicKey={0}'.format(sshkey)]
+    overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
+
     if args.datanode_count is not None:
         overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count)]
 
     if args.locator_count is not None:
         overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
+
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'gemfire_template.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'default_parameters.json')] + overrides)
