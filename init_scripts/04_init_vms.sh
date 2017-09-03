@@ -6,9 +6,9 @@
 # REGION_NAME   the azure region where this cluster is running (becomes part of the host name)
 # GEMFIRE_VERSION either 8 or 9
 
-echo "applying sudo rules........"
-sed -i 's/Defaults\s\{1,\}requiretty/Defaults \!requiretty/g' /etc/sudoers
-echo "$GEMFIRE_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# echo "applying sudo rules........"
+# sed -i 's/Defaults\s\{1,\}requiretty/Defaults \!requiretty/g' /etc/sudoers
+# echo "$GEMFIRE_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 echo "disabling selinux ......"
 setenforce 0
@@ -19,7 +19,7 @@ systemctl stop firewall
 sudo systemctl disable firewalld
 
 echo "Installing wget ...."
-yum insall -y wget
+yum install -y wget
 
 echo "Installing ntp ....."
 yum install -y ntp

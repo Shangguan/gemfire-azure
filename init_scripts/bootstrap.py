@@ -93,6 +93,8 @@ if __name__ == "__main__":
                     interpreter = 'python'
                 elif script.endswith('.sh'):
                     interpreter = 'sh'
+                else:
+                    continue
 
                 log.write(logmsg('running {0}'.format(script)))
                 run('{2} /home/{0}/gemfire-azure/init_scripts/{1}'.format(gemuser,script, interpreter), log)
