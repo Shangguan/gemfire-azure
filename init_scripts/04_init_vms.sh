@@ -68,7 +68,8 @@ then
 		ln -s /usr/local/pivotal-gemfire-9.1.0/ /usr/local/gemfire
 		chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 else
-        echo "Did not understood the version, not installing Gemfire ....."
+        echo "GEMFIRE_VERSION was not specified or an unsupported version was supplied (supported values are 8 and 9)"
+        exit 1
 fi
 
 echo "export JAVA_HOME=/usr/java/jdk1.8.0_144" >> /home/$GEMFIRE_USER/.bashrc

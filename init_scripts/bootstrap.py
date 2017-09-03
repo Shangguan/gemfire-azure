@@ -19,7 +19,10 @@ def logmsg(msg):
 
 
 def parse_env_args(listofargs):
-    result = dict()
+    """
+    parse arguments are added to this processes environment which means
+    they will be inherited by forked processes
+    """
     for arg in listofargs:
         i = arg.find('=')
         if i == -1:
@@ -27,12 +30,10 @@ def parse_env_args(listofargs):
 
         key = arg[0:i]
         val = arg[i+1:]
-        result[key] = val
+        os.environ[key] = val
 
-    return result
-
-def validate_env(environment, log):
-    if 'GEMFIRE_USER' not in environment:
+def validate_env(log):
+    if 'GEMFIRE_USER' not in os.environ:
         log.write(logmsg('require parameter ({0}) not present in environment.'))
         raise AbortBootstrap()
 
@@ -78,9 +79,9 @@ if __name__ == "__main__":
     with open('/var/log/cloud-init.log','w') as log:
         try:
             log.write(logmsg('bootstrap started'))
-            environment = parse_env_args(args.environment)
-            validate_env(environment, log)
-            gemuser = environment['GEMFIRE_USER']
+            parse_env_args(args.environment)
+            validate_env(log)
+            gemuser = os.environ['GEMFIRE_USER']
 
             setup_git(gemuser,args.git_branch,log)
             scripts = os.listdir('/home/{0}/gemfire-azure/init_scripts'.format(gemuser))
