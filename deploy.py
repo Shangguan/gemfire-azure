@@ -47,6 +47,7 @@ def parseArgs():
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = True,help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
+    allgroup.add_argument('--gemfire-azure-version', default='master', help='Name of a branch or tag in the gemfire-azure repo to pull scripts from when configuring vms.')
 
     try:
         args = parser.parse_args()
