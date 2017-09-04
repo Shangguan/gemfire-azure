@@ -73,7 +73,7 @@ if __name__ == '__main__':
     cluster_home_dir = '/home/{0}/gemfire_cluster'.format(runAsUser)
 
     # obtain runAsUser's information from the password database
-    pwdentry = pwd.getpwname(runAsUser)
+    pwdentry = pwd.getpwnam(runAsUser)
 
     # create the cluster home directory if it does not exist
     if os.path.exists(cluster_home_dir):
