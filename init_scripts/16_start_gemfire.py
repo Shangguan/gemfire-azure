@@ -27,4 +27,4 @@ if __name__ == '__main__':
     else:
         print('GemFire cluster failed to start')
 
-    return rc
+    sys.exit(rc)
