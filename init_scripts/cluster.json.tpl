@@ -34,7 +34,7 @@
         "tcp-port" : 10001,
         "server-port" : 10100,
         "gemfire.ALLOW_PERSISTENT_TRANSACTIONS" : "true",
-        locator-wait-time" : "300",
+        "locator-wait-time" : "300",
         "enable-network-partition-detection" : "true"
     },
     "hosts": {
