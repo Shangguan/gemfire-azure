@@ -165,12 +165,8 @@ if __name__ == '__main__':
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
     overrides = overrides + ['adminSSHPublicKey={0}'.format(sshkey)]
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
-
-    if args.datanode_count is not None:
-        overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count)]
-
-    if args.locator_count is not None:
-        overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
+    overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
+    overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
