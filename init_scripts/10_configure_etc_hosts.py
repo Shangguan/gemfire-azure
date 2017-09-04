@@ -1,4 +1,6 @@
 from __future__ import print_function
+import os
+import sys
 
 def validate_env():
     for key in ['LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME', 'STARTING_PRIVATE_IP','PRIVATE_IP_PREFIX']:
