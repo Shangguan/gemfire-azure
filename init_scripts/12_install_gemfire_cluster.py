@@ -15,19 +15,19 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context = dict()
     context['RunAsUser'] = runAsUser
     context['Servers'] = []
-    for n in range(1,locators + dataNodes + 1):
+    for n in range(0,locators + dataNodes):
         server = dict()
         server['Hostname'] = clusterName + '-server' + str(n)
-        server['PublicName'] = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + 'cloudapps.azure.com'
-        server['PrivateIP'] = ipPrefix + str(startingIp + n - 1)
+        server['PublicName'] = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + '.cloudapps.azure.com'
+        server['PrivateIP'] = ipPrefix + str(startingIp + n)
         server['XMX'] = xmx
         server['XMN'] = xmn
         server['Roles'] = []
-        if n <= locators:
+        if n < locators:
             server['Roles'].append('Locator')
         else:
             server['Roles'].append('DataNode')
-            if n == locators + 1:
+            if n == locators:
                 server['Roles'].append("Rest")
 
         context['Servers'].append(server)
