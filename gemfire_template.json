@@ -340,28 +340,14 @@
           {
             "name": "http_rule",
             "properties": {
-              "description": "Allow HTTP access",
+              "description": "Allow 10000 range",
               "protocol": "Tcp",
               "sourcePortRange": "*",
-              "destinationPortRange": "28080",
+              "destinationPortRange": "10000-19999",
               "sourceAddressPrefix": "[parameters('allowedIPAddressPrefix')]",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 101,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "name": "locator_rule",
-            "properties": {
-              "description": "Allow gemfire locator access",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "1044",
-              "sourceAddressPrefix": "[parameters('allowedIPAddressPrefix')]",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 102,
               "direction": "Inbound"
             }
           }
