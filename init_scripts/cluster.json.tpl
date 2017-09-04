@@ -3,7 +3,7 @@
         "gemfire": "${GEMFIRE_HOME}",
         "java-home" : "${JAVA_HOME}",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
-        "cluster-home" : "/home/{{ RunAsUser }}/gem_cluster",
+        "cluster-home" : "/home/{{ RunAsUser }}/gemfire_cluster",
         "distributed-system-id": 1
     },
    "locator-properties" : {

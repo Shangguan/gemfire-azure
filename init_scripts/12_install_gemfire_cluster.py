@@ -6,7 +6,7 @@ import shutil
 import pwd
 
 def validate_env():
-    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME','VM_SIZE', 'AZ_SUBSCRIPTION']:
+    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME','VM_SIZE', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
@@ -17,8 +17,8 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context['Servers'] = []
     for n in range(1,locators + dataNodes + 1):
         server = dict()
-        server['Hostname'] = namePrefix + '-server' + str(n)
-        server['PublicName'] = namePrefix + '-server' + str(n) + '.' + az_subscription + '.'  + region + 'cloudapps.azure.com'
+        server['Hostname'] = clusterName + '-server' + str(n)
+        server['PublicName'] = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + 'cloudapps.azure.com'
         server['PrivateIP'] = ipPrefix + str(startingIp + n - 1)
         server['XMX'] = xmx
         server['XMN'] = xmn
@@ -39,7 +39,7 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     with open(tgt_file,'w') as f:
         tplate.stream(context).dump(f)
 
-    os.chmod(tgt_file, uid,gid)
+    os.chown(tgt_file, uid,gid)
 
 if __name__ == '__main__':
     """
@@ -52,11 +52,11 @@ if __name__ == '__main__':
     DATANODE_COUNT the  number of data nodes in this cluster
     REGION_NAME the Azure region where this cluster is deployed
     VM_SIZE  the size in gigabytes of the VMs
+    CLUSTER_NAME the name of the cluster
     """
     validate_env()
 
     #constants
-    namePrefix = 'dataFabric'
     ipPrefix = '10.0.0.'
     startingIp = 5
 
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     runAsUser = os.environ['GEMFIRE_USER']
     vmSize = int(os.environ['VM_SIZE'])
     az_subscription = os.environ['AZ_SUBSCRIPTION']
+    clusterName = os.environ['CLUSTER_NAME']
 
     # calculated parameters
     xmx = 7 * vmSize / 8
