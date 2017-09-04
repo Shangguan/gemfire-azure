@@ -88,7 +88,7 @@ if __name__ == '__main__':
         src = '/home/{0}/gemfire-azure/gemfire-manager/{1}'.format(runAsUser,script)
         tgt = 'cluster_home_dir/{0}'.format(script)
         shutil.copyfile(src, tgt)
-        os.chown(tgt,pwdentry[2],pwdentry[3]))
+        os.chown(tgt,pwdentry[2],pwdentry[3])
     print('copied gemfire-manager control scripts into cluster home directory')
 
     # generate the cluster defintion file
