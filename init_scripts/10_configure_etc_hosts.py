@@ -38,6 +38,6 @@ if __name__ == '__main__':
     with open('/etc/hosts', 'w') as hostsfile:
         hostsfile.write('127.0.0.1   localhost\n')
         for i in range(locators + dataNodes):
-            hostsfile.write('{0}{1}   {3}'.format(private_ip_prefix,i,public_name(clusterName,az_subscription,region,i)))
+            hostsfile.write('{0}{1}   {2}'.format(private_ip_prefix,i,public_name(clusterName,az_subscription,region,i)))
 
     print('rewrote hosts file')
