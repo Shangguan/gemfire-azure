@@ -2,6 +2,7 @@ from __future__ import print_function
 import jinja2
 import os
 import os.path
+import shutil
 import pwd
 
 def validate_env():
