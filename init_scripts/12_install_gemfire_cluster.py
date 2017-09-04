@@ -61,8 +61,8 @@ if __name__ == '__main__':
     startingIp = 5
 
     # parameters
-    locators = os.environ['LOCATOR_COUNT']
-    dataNodes = os.environ['DATANODE_COUNT']
+    locators = int(os.environ['LOCATOR_COUNT'])
+    dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
     vmSize = int(os.environ['VM_SIZE'])
