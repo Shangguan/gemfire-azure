@@ -26,13 +26,6 @@ yum install -y ntp
 systemctl start ntpd
 systemctl enable ntpd
 
-
-echo "setting private ip and public host name mappings ......"
-host=$(hostname)
-ipaddr=$(hostname -I)
-echo "$ipaddr $host.$REGION_NAME.cloudapps.azure.com $host" >> /etc/hosts
-
-
 echo 'umask 0022' >> /etc/profile
 
 echo "setting nohost check for ssh ..."
