@@ -53,6 +53,7 @@ if __name__ == '__main__':
     REGION_NAME the Azure region where this cluster is deployed
     VM_SIZE  the size in gigabytes of the VMs
     CLUSTER_NAME the name of the cluster
+    AZ_SUBSCRIPTION the name of the user owning this account
     """
     validate_env()
 

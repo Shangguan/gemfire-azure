@@ -1,6 +1,6 @@
 {
     "global-properties":{
-        "gemfire": "${GEMFIRE_HOME}",
+        "gemfire": "${GEMFIRE}",
         "java-home" : "${JAVA_HOME}",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/home/{{ RunAsUser }}/gemfire_cluster",
@@ -47,7 +47,7 @@
                     "type" : "locator",
                     "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}",
                     "jmx-manager-start" : "true"
-                 },
+                 }
                {% endif %}
                {% if "DataNode" in Server.Roles  %}
                 "{{ Server.Hostname }}-datanode" : {
