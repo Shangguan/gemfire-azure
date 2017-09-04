@@ -64,7 +64,7 @@ if __name__ == '__main__':
     dataNodes = os.environ['DATANODE_COUNT']
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
-    vmSize = os.environ['VM_SIZE']
+    vmSize = int(os.environ['VM_SIZE'])
     az_subscription = os.environ['AZ_SUBSCRIPTION']
 
     # calculated parameters
