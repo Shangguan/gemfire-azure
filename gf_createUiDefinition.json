@@ -24,7 +24,7 @@
         "defaultValue": "gfadmin",
         "constraints": {
           "required": true,
-          "regex": "^[a-z0-9]{3,12}$"
+          "regex": "^[a-z0-9]{3,12}$",
           "validationMessage": "You cannot use username gfadmin for the primary SSH user. gfadmin user will be created automatically during deployment"
         },
         "osPlatform": "Linux"
@@ -63,7 +63,7 @@
         "bladeTitle": "Gemfire Settings",
         "elements": [
 		  {
-			  "name": "gemfireVersion"
+			  "name": "gemfireVersion",
               "type": "Microsoft.Common.DropDown",
               "label": "Gemfire Version",
               "defaultValue": "9",
@@ -77,7 +77,7 @@
                   {
                     "label": "9",
                     "value": 9
-                  },
+                  }
 			  ]
 		    }
 		  },
