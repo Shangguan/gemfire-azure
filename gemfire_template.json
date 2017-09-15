@@ -2,13 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "pivotalTags": {
-      "type": "object",
-      "defaultValue": {
-        "provider": "E44900E0-9770-4D2A-8225-DFB0735FB6F6"
-      },
+	  "pivotalTags": {
+	        "type": "object",
+	        "defaultValue": {
+	          "provider": "E44900E0-9770-4D2A-8225-DFB0735FB6F6"
+	        },
+	        "metadata": {
+	          "description": "Provider tags"
+	        }
+	      },  
+    "location": {
+      "type": "string",
       "metadata": {
-        "description": "Provider tags"
+        "description": "Azure location."
       }
     },
     "clusterName": {
@@ -158,18 +164,6 @@
       "metadata": {
         "description": "The size of data disks in GB"
       }
-    },
-    "prepareDiskScript": {
-      "type": "string",
-      "metadata": {
-        "description": "format mount and create RAID 0 script"
-      }
-    },
-    "initGemfireVMScript": {
-      "type": "string",
-      "metadata": {
-        "description": "Perform initialization script for gemfire nodes"
-      }
     }
   },
   "variables": {
@@ -279,7 +273,7 @@
     },
     "gfAvailabilitySetSettings": {
       "name": "[concat(parameters('clusterName'),'-avs')]",
-      "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(resourceGroup().location,' ',''))].maximumPlatformFaultDomainCount]",
+      "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(parameters('location'),' ',''))].maximumPlatformFaultDomainCount]",
       "updateDomainCount": "5",
       "managed": true
     },
@@ -290,8 +284,6 @@
     "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')) ]",
     "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', parameters('subnetName')) ]",
     "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
-    "VMInstallScriptUri": "[parameters('initGemfireVMScript')]",
-    "VMPrepareDisksUri": "[parameters('prepareDiskScript')]",
     "s1": "[split(parameters('subnetStartAddress'),'.')]"
   },
   "resources": [
@@ -299,7 +291,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[ concat( variables('gfstorageAccountName'), copyIndex() )]",
       "apiVersion": "[variables('apiVersions').storage.storageAccounts]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "copy": {
         "name": "storageAccountLoop",
         "count": "[parameters('gemfireHostsCount')]"
@@ -317,7 +309,7 @@
       "apiVersion": "[variables('apiVersions').network.networkSecurityGroups]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('gfSecurityGroupName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "tags": {
         "provider": "[toUpper(parameters('pivotalTags').provider)]"
       },
@@ -358,7 +350,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[ parameters('virtualNetworkName')]",
       "apiVersion": "[variables('apiVersions').network.virtualNetworks]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('gfSecurityGroupName'))]"
       ],
@@ -389,7 +381,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[ concat( parameters('publicIpAddressName'), copyIndex() ) ]",
       "apiVersion": "[variables('apiVersions').network.publicIPAddresses]",
-      "location": "[ resourceGroup().location ]",
+      "location": "[ parameters('location') ]",
       "copy": {
         "name": "pubIpLoop",
         "count": "[parameters('gemfireHostsCount')]"
@@ -405,7 +397,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(parameters('networkInterfaceName'), copyIndex())]",
       "apiVersion": "[variables('apiVersions').network.networkInterfaces]",
-      "location": "[ resourceGroup().location ]",
+      "location": "[ parameters('location') ]",
       "dependsOn": [
         "[concat ('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
       ],
@@ -441,7 +433,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('gfNodeName'), copyIndex())]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), copyIndex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
@@ -514,7 +506,7 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[parameters('gemfireHostsCount')]"
@@ -530,7 +522,7 @@
           "fileUris": [
             "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' AZ_SUBSCRIPTION=', subscription().displayName, ' VM_SIZE=',parameters('vmSize'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' AZ_SUBSCRIPTION=', subscription().displayName, ' VM_SIZE=',parameters('vmSize'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     }

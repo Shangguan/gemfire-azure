@@ -2,15 +2,18 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": {
+      "value": "East US"
+    },
     "adminUserName": {
       "value": "gfadmin"
     },
-    "azureGemFireVersion" : {
-      "value" : "master"
+    "azureGemFireVersion": {
+      "value": "master"
     },
-	"storageAccountType" : {
-		"value" : "Premium_LRS"
-	},
+    "storageAccountType": {
+      "value": "Premium_LRS"
+    },
     "vmType": {
       "value": "Standard_DS13_v2"
     },
@@ -21,7 +24,7 @@
       "value": 3
     },
     "gemfireLocatorsCount": {
-	"value": 2
+      "value": 2
     },
     "dataDiskCount": {
       "value": 2
@@ -29,34 +32,29 @@
     "dataDiskSizeGB": {
       "value": 1023
     },
-	"prepareDiskScript": {
-		"value": "https://gemfirestgacct01.blob.core.windows.net/scripts/prepare_data_disks.sh"
-	},
-	"initGemfireVMScript" : {
-		"value": "https://gemfirestgacct01.blob.core.windows.net/scripts/Init_GemfireVM.sh"
-	},
-	"gemfireVersion": {
-		"value": 9
-	},
-	"networkInterfaceName": {
-		"value": "gemfiredatafabric-nic"
-	},
-	"virtualNetworkName": {
-		"value": "gemfiredatafabric-vnet"
-	},
-	"virtualNetworkAddressSpace": {
-		"value": "10.0.0.0/16"
-	},
-	"subnetName": {
-		"value": "gemfiredatafabric-subnet"
-	},
+    "gemfireVersion": {
+      "value": 9
+    },
+    "networkInterfaceName": {
+      "value": "gemfiredatafabric-nic"
+    },
+    "virtualNetworkName": {
+      "value": "gemfiredatafabric-vnet"
+    },
+    "virtualNetworkAddressSpace": {
+      "value": "10.0.0.0/16"
+    },
+    "subnetName": {
+      "value": "gemfiredatafabric-subnet"
+    },
     "subnetAddressSpace": {
       "value": "10.0.1.0/24"
     },
     "subnetStartAddress": {
-     "Value": "10.0.1.4"      }
+      "Value": "10.0.1.4"
     },
-	"publicIpAddressName": {
-		"value": "gemfiredatafabric-publicip"
+    "publicIpAddressName": {
+      "value": "gemfiredatafabric-publicip"
+    }
   }
 }
