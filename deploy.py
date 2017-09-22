@@ -170,5 +170,5 @@ if __name__ == '__main__':
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
-    azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'gemfire_template.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'default_parameters.json')] + overrides)
+    azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'mainTemplate.parameters.json')] + overrides)
     print('GemFire cluster deployed.')

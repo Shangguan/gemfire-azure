@@ -46,24 +46,12 @@ wget https://gemfirestgacct01.blob.core.windows.net/binaries/jdk-8u144-linux-x64
 yum localinstall -y jdk-8u144-linux-x64.rpm
 rm -f jdk-8u102-linux-x64.rpm
 
-if [ "$GEMFIRE_VERSION" == 8 ]
-then
-        wget https://gemfirestgacct01.blob.core.windows.net/binaries/Pivotal_GemFire_826_b41_Linux.tar.gz
-        tar -xvf Pivotal_GemFire_826_b41_Linux.tar.gz
-		mv Pivotal_GemFire_826_b41_Linux /usr/local/
-		ln -s /usr/local/Pivotal_GemFire_826_b41_Linux/ /usr/local/gemfire
-		chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
-elif [ "$GEMFIRE_VERSION" == 9 ]
-then
-        wget https://gemfirestgacct01.blob.core.windows.net/binaries/pivotal-gemfire-9.1.0.tar.gz
-        tar -xvf pivotal-gemfire-9.1.0.tar.gz
-		mv pivotal-gemfire-9.1.0 /usr/local/
-		ln -s /usr/local/pivotal-gemfire-9.1.0/ /usr/local/gemfire
-		chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
-else
-        echo "GEMFIRE_VERSION was not specified or an unsupported version was supplied (supported values are 8 and 9)"
-        exit 1
-fi
+echo "installing Gemfire software ........"
+wget https://gemfirestgacct01.blob.core.windows.net/binaries/pivotal-gemfire-9.1.1.tar.gz
+tar -xvf pivotal-gemfire-9.1.1.tar.gz
+mv pivotal-gemfire-9.1.1 /usr/local/
+ln -s /usr/local/pivotal-gemfire-9.1.1/ /usr/local/gemfire
+chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 
 echo export JAVA_HOME=/usr/java/jdk1.8.0_144 >> /home/$GEMFIRE_USER/.bashrc
 echo export GEMFIRE=/usr/local/gemfire >> /home/$GEMFIRE_USER/.bashrc

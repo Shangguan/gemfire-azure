@@ -30,26 +30,15 @@
         "osPlatform": "Linux"
       },
       {
-        "name": "adminCredentials",
-        "type": "Microsoft.Compute.CredentialsCombo",
-        "label": {
-          "authenticationType": "Authentication Type",
-          "password": "Admin Password",
-          "confirmPassword": "Confirm Admin Password",
-          "sshPublicKey": "SSH Public Key"
-        },
-        "toolTip": {
-          "authenticationType": "Which authentication type to use when connecting to the virtual machines: Password or SSH Public Key",
-          "adminPassword": "Admin password for the virtual machines",
-          "adminPublicKey": "SSH public key that will be included on all nodes in the cluster. The OpenSSH public key can be generated with tools like ssh-keygen on Linux or OS X."
-        },
+        "name": "sshPublicKey",
+        "type": "Microsoft.Common.TextBox",
+        "label": "SSH Public Key",
+        "toolTip": "SSH public key that will be included on all nodes in the cluster",
+        "defaultValue": "",
         "constraints": {
-          "required": true
-        },
-        "options": {
-          "hideConfirmation": false
-        },
-        "osPlatform": "Linux"
+          "required": true,
+          "validationMessage": "SSH Public Key cannot be null"
+        }
       }
     ],
     "steps": [
@@ -62,29 +51,10 @@
         },
         "bladeTitle": "Gemfire Settings",
         "elements": [
-		  {
-			  "name": "gemfireVersion",
-              "type": "Microsoft.Common.DropDown",
-              "label": "Gemfire Version",
-              "defaultValue": "9",
-              "toolTip": "Gemfire base version to use. Installs the highest minor version of base selected.",
-              "constraints": {
-                "allowedValues": [
-                  {
-                    "label": "8",
-                    "value": 8
-                  },
-                  {
-                    "label": "9",
-                    "value": 9
-                  }
-			  ]
-		    }
-		  },
           {
             "name": "gemfireHostsCount",
             "type": "Microsoft.Common.DropDown",
-            "label": "Number of servers",
+            "label": "Number of Servers",
             "defaultValue": "2",
             "toolTip": "The number of virtual machines to provision for the servers in this cluster.",
             "constraints": {
@@ -115,7 +85,7 @@
           {
             "name": "gemfireLocatorsCount",
             "type": "Microsoft.Common.DropDown",
-            "label": "Number of servers",
+            "label": "Number of locators",
             "defaultValue": "1",
             "toolTip": "The number of locators run for the servers in this cluster.",
             "constraints": {
@@ -162,8 +132,7 @@
                 "Standard_DS3"
               ]
             },
-            "osPlatform": "Linux",
-            "count": "[add(add(steps('clusterConfig').segmentHostsCount),1)]"
+            "osPlatform": "Linux"
           },
           {
             "name": "dataDiskCount",
@@ -244,16 +213,13 @@
     ],
     "outputs": {
       "location": "[location()]",
-      "pivotalNetworkToken": "[basics('pivotalNetworkToken')]",
       "clusterName": "[basics('clusterName')]",
       "adminUsername": "[basics('adminUsername')]",
-      "adminPassword": "[basics('adminCredentials').password]",
-      "adminSSHPublicKey": "[basics('adminCredentials').sshPublicKey]",
-      "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "gpadminPassword": "[steps('clusterConfig').gpadminPassword]",
-      "locatorCount": "[steps('clusterConfig').locatorCount]",
-      "vmSize": "[steps('clusterConfig').vmSize]",
-      "dataDiskCount": "[steps('clusterConfig').dataDiskCount]",
+      "adminSSHPublicKey": "[basics('sshPublicKey')]",
+      "gemfireHostsCount": "[steps('clusterConfig').gemfireHostsCount]",
+      "locatorCount": "[steps('clusterConfig').gemfireLocatorsCount]",
+      "vmSize": "[steps('clusterConfig').vmType]",
+      "dataDiskCount": "[steps('clusterConfig').dataDisksCount]",
       "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]"
     }
   }
