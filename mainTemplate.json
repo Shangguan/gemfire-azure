@@ -1,0 +1,531 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+	  "pivotalTags": {
+	        "type": "object",
+	        "defaultValue": {
+	          "provider": "E44900E0-9770-4D2A-8225-DFB0735FB6F6"
+	        },
+	        "metadata": {
+	          "description": "Provider tags"
+	        }
+	      },  
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure location."
+      }
+    },
+    "clusterName": {
+      "type": "string",
+      "metadata": {
+        "description": "gemfire cluster name, may only contains URL safe characters"
+      }
+    },
+    "azureGemFireVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "The version of the azure-gemfire project to deploy (optional, defaults to latest release)"
+      }
+    },
+    "gemfireVersion": {
+      "type": "int",
+      "metadata": {
+        "description": "Gemfire version"
+      }
+    },
+    "adminUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin user name for the VMs"
+      }
+    },
+    "adminSSHPublicKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin publickey for the VMs"
+      }
+    },
+    "vmType": {
+      "type": "string",
+      "metadata": {
+        "description": "Gemfire VM type"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Amount of memory (in G) on the selected vmType"
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Premium_LRS",
+      "metadata": {
+        "description": "The type of the Storage Account"
+      }
+    },
+    "networkInterfaceName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-nic",
+      "metadata": {
+        "description": "Unique name for NIC"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-vnet",
+      "metadata": {
+        "description": "Unique name for Virtual network"
+      }
+    },
+    "virtualNetworkAddressSpace": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Virtual Network Address Prefix (i.e. CIDR)"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-subnet",
+      "metadata": {
+        "description": "Unique name for subnet"
+      }
+    },
+    "subnetAddressSpace": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24",
+      "metadata": {
+        "description": "Subnet1 Address Space"
+      }
+    },
+    "subnetStartAddress": {
+      "type": "string",
+      "defaultValue": "10.0.1.4",
+      "metadata": {
+        "description": "Subnet1 Start Address"
+      }
+    },
+    "publicIpAddressName": {
+      "type": "string",
+      "defaultValue": "gemfiredatafabric-publicip",
+      "metadata": {
+        "description": "Unique name for publicip"
+      }
+    },
+    "allowedIPAddressPrefix": {
+      "type": "string",
+      "defaultValue": "0.0.0.0/0",
+      "metadata": {
+        "description": "The IP address range (i.e. CIDR) that can be used to access the master node from the outside of the VNet"
+      }
+    },
+    "gemfireHostsCount": {
+      "type": "int",
+      "allowedValues": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "metadata": {
+        "description": "The number of virtual machines instances to provision for the Gemfire servers"
+      }
+    },
+    "gemfireLocatorsCount": {
+      "type": "int",
+      "allowedValues": [
+        1,
+        2,
+        3
+      ],
+      "metadata": {
+        "description": "The number of virtual machines instances to provision for the Gemfire Locator servers"
+      }
+    },
+    "dataDiskCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The number of data disks to attach to each Gemfire server"
+      }
+    },
+    "dataDiskSizeGB": {
+      "type": "int",
+      "defaultValue": 1023,
+      "metadata": {
+        "description": "The size of data disks in GB"
+      }
+    }
+  },
+  "variables": {
+    "apiVersions": {
+      "resources": {
+        "deployments": "2016-09-01"
+      },
+      "storage": {
+        "storageAccounts": "2016-05-01"
+      },
+      "network": {
+        "virtualNetworks": "2016-09-01",
+        "networkInterfaces": "2016-09-01",
+        "loadBalancers": "2016-09-01",
+        "publicIPAddresses": "2016-09-01",
+        "networkSecurityGroups": "2016-09-01"
+      },
+      "compute": {
+        "availabilitySets": "2016-04-30-preview",
+        "virtualMachines": "2016-04-30-preview",
+        "virtualMachineExtensions": "2016-04-30-preview",
+        "disks": "2016-04-30-preview"
+      }
+    },
+    "faultdomainCountMap": {
+      "eastus": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "eastus2": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "westus": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "centralus": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "northcentralus": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "southcentralus": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "northeurope": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "westeurope": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "eastasia": {
+        "maximumPlatformFaultDomainCount": 3
+      },
+      "southeastasia": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "japaneast": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "japanwest": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "australiaeast": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "australiasoutheast": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "brazilsouth": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "southindia": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "centralindia": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "canadacentral": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "canadaeast": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "westus2": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "westcentralus": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "uksouth": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "ukwest": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "koreacentral": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "koreasouth": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "eastus2euap": {
+        "maximumPlatformFaultDomainCount": 2
+      },
+      "centraluseuap": {
+        "maximumPlatformFaultDomainCount": 1
+      }
+    },
+    "gfAvailabilitySetSettings": {
+      "name": "[concat(parameters('clusterName'),'-avs')]",
+      "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(parameters('location'),' ',''))].maximumPlatformFaultDomainCount]",
+      "updateDomainCount": "5",
+      "managed": true
+    },
+    "gfVmSize": "[parameters('vmType')]",
+    "gfNodesCount": "[parameters('gemfireHostsCount')]",
+    "gfNodeName": "[concat(parameters('clusterName'), '-server') ]",
+    "gfstorageAccountName": "[concat(parameters('clusterName'), 'stgact')]",
+    "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')) ]",
+    "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', parameters('subnetName')) ]",
+    "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
+    "s1": "[split(parameters('subnetStartAddress'),'.')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[ concat( variables('gfstorageAccountName'), copyIndex() )]",
+      "apiVersion": "[variables('apiVersions').storage.storageAccounts]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "storageAccountLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "kind": "Storage",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "tags": {
+        "provider": "[toUpper(parameters('pivotalTags').provider)]"
+      },
+      "properties": {}
+    },
+    {
+      "apiVersion": "[variables('apiVersions').network.networkSecurityGroups]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('gfSecurityGroupName')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "provider": "[toUpper(parameters('pivotalTags').provider)]"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ssh_rule",
+            "properties": {
+              "description": "Allow SSH access",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "[parameters('allowedIPAddressPrefix')]",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "http_rule",
+            "properties": {
+              "description": "Allow 10000 range",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "10000-19999",
+              "sourceAddressPrefix": "[parameters('allowedIPAddressPrefix')]",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[ parameters('virtualNetworkName')]",
+      "apiVersion": "[variables('apiVersions').network.virtualNetworks]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('gfSecurityGroupName'))]"
+      ],
+      "tags": {
+        "Name": "Pivotal Gemfire",
+        "provider": "[toUpper(parameters('pivotalTags').provider)]"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[ parameters('virtualNetworkAddressSpace') ]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[ parameters('subnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetAddressSpace')]",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('gfSecurityGroupName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[ concat( parameters('publicIpAddressName'), copyIndex() ) ]",
+      "apiVersion": "[variables('apiVersions').network.publicIPAddresses]",
+      "location": "[ parameters('location') ]",
+      "copy": {
+        "name": "pubIpLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-',subscription().displayName )) ]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('networkInterfaceName'), copyIndex())]",
+      "apiVersion": "[variables('apiVersions').network.networkInterfaces]",
+      "location": "[ parameters('location') ]",
+      "dependsOn": [
+        "[concat ('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
+      ],
+      "copy": {
+        "name": "gfNodesNicsCopy",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "tags": {
+        "provider": "[toUpper(parameters('pivotalTags').provider)]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "[ concat( 'ipconfig-', copyIndex() ) ]",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[ concat(variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.', string( add (int(variables('s1')[3]), copyIndex()) ) )]",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('publicIpAddressName'), copyIndex() ) )]"
+              },
+              "subnet": {
+                "id": "[variables('gfsubnetRef')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('gfSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('gfNodeName'), copyIndex())]",
+      "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), copyIndex())]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
+      ],
+      "copy": {
+        "name": "gfNodeNicLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('gfVmSize') ]"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('gfNodeName'), copyIndex())]",
+          "adminUsername": "[parameters('adminUserName')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": "true",
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "[concat('/home/', parameters('adminUserName'), '/.ssh/authorized_keys')]",
+                  "keyData": "[parameters('adminSSHPublicKey')]"
+                }
+              ]
+            }
+          }
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "OpenLogic",
+            "offer": "CentOS",
+            "sku": "7.3",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(variables('gfNodeName'), copyIndex(), '-osdisk')]",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "[parameters('storageAccountType')]"
+            }
+          },
+          "copy": [
+            {
+              "name": "dataDisks",
+              "count": "[parameters('dataDiskCount')]",
+              "input": {
+                "caching": "None",
+                "diskSizeGB": "[parameters('dataDiskSizeGB')]",
+                "lun": "[copyIndex('dataDisks')]",
+                "name": "[concat(variables('gfNodeName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+                "managedDisk": {
+                  "storageAccountType": "[parameters('storageAccountType')]"
+                },
+                "createOption": "Empty"
+              }
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'), copyIndex()))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+      "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "gfNodeNicLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [
+            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
+          ],
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' AZ_SUBSCRIPTION=', subscription().displayName, ' VM_SIZE=',parameters('vmSize'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}
