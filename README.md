@@ -22,7 +22,20 @@ file name for the value of the_--public-ssh-key-file_ parameter.
 First complete _Setup for Script Based Deployment_ (below).
 
 ```
-python ./deploy.py --create-resource-group MyTestGroup --location eastus2  --public-ssh-key-file ./azuredev.pub   --datanode-count 2 --cluster-name gemdev1
+python ./deploy.py --location eastus --public-ssh-key-file ~/.ssh/id_rsa.pub --datanode-count 2 --cluster-name gemdev1 --authentication-type sshPublicKey --use-resource-group MyTestGroup
+```
+You can ommit the ssh key file, there is default key bundled.
+
+```
+python ./deploy.py --location eastus --datanode-count 2 --cluster-name gemdev1 --authentication-type sshPublicKey --use-resource-group MyTestGroup
+
+```
+You can also install without ssh key
+
+```
+
+python ./deploy.py --location eastus --datanode-count 2 --cluster-name gemdev1 --authentication-type password --use-resource-group MyTestGroup
+
 ```
 
 After the cluster is deployed and started, determine the public name of the
