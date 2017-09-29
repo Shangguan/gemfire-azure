@@ -8,14 +8,8 @@
     "adminUserName": {
       "value": "gfadmin"
     },
-    "adminPassword": {
-        "value": ""
-      },
       "authenticationType": {
         "value": "sshPublicKey"
-      },
-      "adminSSHPublicKey": {
-        "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOFWAgpgqdBcCPrpfhUtPhUrvtg0wzsFLJUrhwpmbZXBEbVoL6zhjyyaq8SQxwvTfiDROR8vqESwwFV9eRCI8BLvdTM6Q3XEVJeelgYpRo8TXgUtrHZRhHxdMYp+t6mtl7MhrI3TwS24xnncsrygTGyTnwHy569DD7l3sdp2kmjNstjU6KTSk+PLAnKNGY7j2iY0tFM3i9SPA4ELBwPVJ2C5ijs3dSmbOc2Vj4qHOvCHr4N60wdQ2FGq6havTn/H8KwrM20B/kzORPPFfTQd2p150plNhxcOvJbBDUa0uIKXWAhp6gKVoHA3UfDo7corFc5YSC839kVFff+eUFLjHD pivot@pivotalmbp"
       },
     "storageAccountType": {
       "value": "Premium_LRS"
