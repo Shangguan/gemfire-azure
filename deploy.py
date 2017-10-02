@@ -15,11 +15,9 @@ azureregions = [
   "canadaeast",
   "centralindia",
   "centralus",
-  "centraluseuap",
   "eastasia",
   "eastus",
   "eastus2",
-  "eastus2euap",
   "japaneast",
   "japanwest",
   "koreacentral",
@@ -36,6 +34,7 @@ azureregions = [
   "westus",
   "westus2"
 ]
+
 
 def detect_git_branch():
     """
@@ -62,7 +61,7 @@ def parseArgs():
     allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for "gfadmin" will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = False, help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
-    allgroup.add_argument('--location', help='The Azure region where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
+    allgroup.add_argument('--location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
 
