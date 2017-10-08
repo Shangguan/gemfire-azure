@@ -61,12 +61,12 @@ if __name__ == '__main__':
     ipPrefix = '10.0.0.'
     startingIp = 5
 
-    # parameters
+    # parameters  
     locators = int(os.environ['LOCATOR_COUNT'])
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
-    vmSize = int(os.environ['VM_SIZE'])
+    vmSize = 56
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
 
