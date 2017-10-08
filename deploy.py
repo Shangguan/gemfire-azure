@@ -35,6 +35,10 @@ azureregions = [
   "westus2"
 ]
 
+authentication_types= [
+    "password",
+    "sshPublicKey"
+]
 
 def detect_git_branch():
     """
@@ -58,6 +62,7 @@ def parseArgs():
     allgroup = parser.add_argument_group('arguments')
     allgroup.add_argument('--cluster-name', required=True, help='A unique name for the cluster.')
     allgroup.add_argument('--use-resource-group', help='The name of an existing resource group in which to deploy the GemFire cluster.')
+    allgroup.add_argument('--authentication-type', required=True, help='Authentication type for hosts.', choices = authentication_types)
     allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for "gfadmin" will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = False, help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
@@ -81,10 +86,24 @@ def parseArgs():
 
     if args.create_resource_group is not None and args.location is None:
         sys.exit('--location must be supplied whenever --create-resource-group is given')
-
+        
+    if args.authentication_type == 'password' and args.admin_password is None:
+        sys.exit('--authentication_type is set as password, please specify value to  --admin_password ')
+        
+    if args.authentication_type == 'password' and args.public_ssh_key_file is not None:
+        sys.exit('--authentication_type is set as password, please remove --public_ssh_key_file ')
+        
+    if args.authentication_type == 'sshPublicKey' and args.public_ssh_key_file is None:
+        sys.exit('--authentication_type is set as sshPublicKey, please specify value to --public_ssh_key_file ')
+    
+    if args.authentication_type == 'sshPublicKey' and args.admin_password is not None:
+        sys.exit('--authentication_type is set as sshPublicKey, please remove --admin_password argument')
+    
+    # May be not needed    
     if args.admin_password is not None and args.public_ssh_key_file is not None:
         sys.exit('only one of --public-ssh-key-file and --admin-password can be supplied')
-
+        
+        
     return args
 
 def azrun_list(cmds):
@@ -161,24 +180,22 @@ if __name__ == '__main__':
         resourcegroup = args.create_resource_group
 
     # retrieve the ssh key material
-    sshkey = args.public_ssh_key_file.read(17384)
-    args.public_ssh_key_file.close()
-
-    #infer authentication_type
-    if args.public_ssh_key_file:
-        authentication_type = 'sshPublicKey'
-    else:
-        authentication_type = 'password'
+    if args.authentication_type == 'sshPublicKey':
+        sshkey = args.public_ssh_key_file.read(17384)
+        args.public_ssh_key_file.close()  
+    else:    
+        sshkey = ''
 
     # compose the az command  sshPublicKey
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
-    overrides = overrides + ['authenticationType={0}'.format(authentication_type)]
-    overrides = overrides + ['adminSSHPublicKey={0}'.format(sshkey)]
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
     overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
-
+    overrides = overrides + ['authenticationType={0}'.format(args.authentication_type)]
+    overrides = overrides + ['adminPassword={0}'.format(args.admin_password)]
+    overrides = overrides + ['sshPublicKey={0}'.format(sshkey)]
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'mainTemplate.parameters.json')] + overrides)
     print('GemFire cluster deployed.')
+    

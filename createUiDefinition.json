@@ -231,7 +231,7 @@
 	  "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireHostsCount": "[steps('clusterConfig').gemfireHostsCount]",
       "locatorCount": "[steps('clusterConfig').gemfireLocatorsCount]",
-      "vmSize": "[steps('clusterConfig').vmType]",
+      "vmType": "[steps('clusterConfig').vmType]",
       "dataDiskCount": "[steps('clusterConfig').dataDisksCount]",
       "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]"
     }

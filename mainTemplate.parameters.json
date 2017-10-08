@@ -29,9 +29,6 @@
     "dataDiskSizeGB": {
       "value": 1023
     },
-    "gemfireVersion": {
-      "value": 9
-    },
     "networkInterfaceName": {
       "value": "gemfiredatafabric-nic"
     },
