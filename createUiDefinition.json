@@ -230,7 +230,7 @@
 	  "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 	  "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireHostsCount": "[steps('clusterConfig').gemfireHostsCount]",
-      "locatorCount": "[steps('clusterConfig').gemfireLocatorsCount]",
+      "gemfireLocatorsCount": "[steps('clusterConfig').gemfireLocatorsCount]",
       "vmType": "[steps('clusterConfig').vmType]",
       "dataDiskCount": "[steps('clusterConfig').dataDisksCount]",
       "dataDiskSizeGB": "[steps('clusterConfig').dataDiskSizeGB]"

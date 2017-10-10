@@ -411,7 +411,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-',subscription().displayName )) ]"
+          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-', replace(subscription().displayName, ' ','') ) )]"  		  
         }
       }
     },
