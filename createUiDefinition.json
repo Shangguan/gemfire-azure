@@ -223,7 +223,6 @@
       }
     ],
     "outputs": {
-      "location": "[location()]",
       "clusterName": "[basics('clusterName')]",
       "adminUsername": "[basics('adminUsername')]",
 	  "adminPassword": "[basics('adminCredentials').password]",
