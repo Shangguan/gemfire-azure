@@ -19,7 +19,7 @@
     },
     "azureGemFireVersion": {
       "type": "string",
-      "defaultValue": "master",
+      "defaultValue": "develop",
       "metadata": {
         "description": "The version of the azure-gemfire project to deploy (optional, defaults to latest release)"
       }
