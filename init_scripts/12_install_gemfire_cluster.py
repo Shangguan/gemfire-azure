@@ -18,7 +18,8 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     for n in range(0,locators + dataNodes):
         server = dict()
         server['Hostname'] = clusterName + '-server' + str(n)
-        server['PublicName'] = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + '.cloudapp.azure.com'
+        sn = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + '.cloudapp.azure.com'
+        server['PublicName'] = sn.lower()
         server['PrivateIP'] = ipPrefix + str(startingIp + n)
         server['XMX'] = xmx
         server['XMN'] = xmn
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     ipPrefix = '10.0.0.'
     startingIp = 5
 
-    # parameters  
+    # parameters
     locators = int(os.environ['LOCATOR_COUNT'])
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
