@@ -50,6 +50,13 @@ Ensure that the `az` command is on the path.
 
 Make sure you have authenticated with the CLI: `az login`
 
+## Known Issues
+
+1. Two clusters cannot be deployed into the same resource group.
+
+## Troubleshooting
+1. Be sure the cluster-name is unique across the entire account.
+
 ## Developer Notes
 A 3 node Vagrant development environment has been included for testing the
 initialization scripts.  To test, run `vagrant up`.  The VMs will be provisioned
