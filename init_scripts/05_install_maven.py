@@ -45,7 +45,7 @@ if __name__ == '__main__':
         linkName = LINK_NAME
         runQuietly('ln', '-s', os.path.join(parentDir,archiveDir), os.path.join(parentDir, linkName))
 
-        print 'installed {1}'.format( name)
+        print 'installed {0}'.format( name)
 
     uid = None
     gid = None
