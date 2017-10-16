@@ -64,7 +64,7 @@ if __name__ == '__main__':
       os.mkdir(m2Dir)
       os.chown(m2Dir,uid,gid)
 
-    shutil.copy('settings.xml', m2Dir)
+    shutil.copy('/home/user/{0}/gemfire-azure/init_scripts/settings.xml'.format(gemuser), m2Dir)
 
     os.chown(os.path.join(m2Dir,'settings.xml'), uid, gid)
     print 'configured maven settings for ' + gemuser
