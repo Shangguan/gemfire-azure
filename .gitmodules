@@ -1,3 +1,6 @@
 [submodule "gemfire-manager"]
 	path = gemfire-manager
 	url = https://github.com/Pivotal-Data-Engineering/gemfire-manager.git
+[submodule "gemfire-dynamic-security"]
+	path = gemfire-dynamic-security
+	url = git@github.com:Pivotal-Data-Engineering/gemfire-dynamic-security.git
