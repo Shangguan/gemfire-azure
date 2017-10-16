@@ -39,7 +39,7 @@ if __name__ == '__main__':
         print '{0} is already installed - continuing'.format(name)
     else:
         runQuietly('wget', '-P', '/tmp', archiveURL)
-        runQuietly('tar', '-C', parentDir, '-xzf', '/tmp/setup/' + archiveFile)
+        runQuietly('tar', '-C', parentDir, '-xzf', '/tmp/' + archiveFile)
         runQuietly('chown', '-R', '{0}:{0}'.format(gemuser), os.path.join(parentDir,archiveDir))
 
         linkName = LINK_NAME
