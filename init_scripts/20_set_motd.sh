@@ -28,10 +28,9 @@ Connect to Gemfire Pulse
      User ID and PWD: admin/admin
 
 Gemfire Documentation
-   - Pivotal Home: https://pivotal.io
-   - Gemfire Pulse Overview: http://gemfire.docs.pivotal.io/geode/tools_modules/pulse/pulse-overview.html
+   - Getting Started with Gemfire: http://gemfire.docs.pivotal.io/gemfire/getting_started/book_intro.html
    - Gemfire Documentation: http://gemfire.docs.pivotal.io/gemfire/about_gemfire.html
-   - Gemfire Documentation pdf version: http://gemfire.docs.pivotal.io/pdf/pivotal-gemfire-91.pdf
+   - Gemfire Pulse Overview: http://gemfire.docs.pivotal.io/geode/tools_modules/pulse/pulse-overview.html
 
 Learn more about Gemfire
    - Gemfire 30 second review: https://www.youtube.com/watch?v=AEpILFGX8y0
