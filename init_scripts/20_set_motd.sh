@@ -25,7 +25,7 @@ Gemfire Version:  $gemfire_version
 Display DNS names and IP addresses 
    - From the Linux command prompt:  cat /etc/hosts
 
-Run some validation steps to get started
+Getting Started
    - The document "gemfire_validation_doc.md" can be used to validate Gemfire as 
      well as provide an introduction to some of the GemFire cli (gfsh) commands. 
      Run the following to Read the validation doc:    
