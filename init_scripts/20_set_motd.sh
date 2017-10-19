@@ -12,7 +12,7 @@ echo "### Starting script $0 .........."
 INSTALL_DIR="/opt/pivotal/gemfire"
 [[ ! -d ${INSTALL_DIR} ]] && { mkdir -p $INSTALL_DIR; chown gfadmin:gfadmin ${INSTALL_DIR}; }
 
-mv /home/gfadmin/gemfire-azure/gemfire_validation_doc.md /opt/pivotal/gemfire/gemfire_validation_doc.md
+mv /home/gfadmin/gemfire-azure/init_scripts/gemfire_validation_doc.md /opt/pivotal/gemfire/gemfire_validation_doc.md
 
 gemfire_version=$(ls  -r /usr/local/ | grep pivotal-gemfire)
 
