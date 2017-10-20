@@ -178,7 +178,7 @@ if __name__ == '__main__':
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
     overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
-    overrides = overrides + ['gemfireSuperUserPassword={0}'].format(args.gemfire_superuser_password)
+    overrides = overrides + ['gemfireSuperUserPassword={0}'.format(args.gemfire_superuser_password)]
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
