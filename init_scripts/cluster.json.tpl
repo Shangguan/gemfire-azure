@@ -10,7 +10,7 @@
         "security-admin-password" : "{{ GFAdminPassword }}",
         "security-disk-store-dir" : "{{ SecurityDiskDir }}",
         "user": "gfpeer",
-        "password" : "{{ GFPeerPassword }}"
+        "password" : "{{ GFPeerPassword }}",
         "distributed-system-id": 1
     },
    "locator-properties" : {
