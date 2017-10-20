@@ -5,6 +5,7 @@ import os.path
 import random
 import shutil
 import pwd
+import sys
 
 chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -13,7 +14,7 @@ def randpass():
     return ''.join(rp)
 
 def validate_env():
-    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME','VM_SIZE', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
+    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
