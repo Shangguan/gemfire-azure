@@ -4,6 +4,13 @@
         "java-home" : "${JAVA_HOME}",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/home/{{ RunAsUser }}/gemfire_cluster",
+        "classpath" : "{{ GemFireClassPath }}",
+        "security-manager" : "io.pivotal.pde.gemfire.dynamic.security.DynamicSecurityManager",
+        "security-peer-password" : "{{ GFPeerPassword }}",
+        "security-admin-password" : "{{ GFAdminPassword }}",
+        "security-disk-store-dir" : "{{ SecurityDiskDir }}",
+        "user": "gfpeer",
+        "password" : "{{ GFPeerPassword }}"
         "distributed-system-id": 1
     },
    "locator-properties" : {
