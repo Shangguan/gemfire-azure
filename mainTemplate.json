@@ -33,7 +33,7 @@
     "adminUserName": {
       "type": "string",
       "metadata": {
-        "description": "Admin user name for the VMs"
+        "description": "User name for SSH access to cluster virtual machines"
       }
     },
     "authenticationType": {
@@ -44,32 +44,26 @@
         "sshPublicKey"
       ],
       "metadata": {
-        "description": "Authentication type for the virtual machines"
+        "description": "Authentication type for SSH access to cluster virtual machines"
       }
     },
     "adminPassword": {
       "type": "securestring",
       "defaultValue": "",
       "metadata": {
-        "description": "Password for administrator"
+        "description": "Password for SSH access to cluster virtual machines"
       }
     },
     "adminSSHPublicKey": {
       "type": "securestring",
       "metadata": {
-        "description": "Admin publickey for the VMs"
+        "description": "Public key material for SSH access to cluster virtual machines"
       }
     },
     "vmType": {
       "type": "string",
       "metadata": {
         "description": "Gemfire VM type"
-      }
-    },
-    "vmSize": {
-      "type": "string",
-      "metadata": {
-        "description": "Amount of memory (in G) on the selected vmType"
       }
     },
     "storageAccountType": {
@@ -162,6 +156,13 @@
       ],
       "metadata": {
         "description": "The number of virtual machines instances to provision for the Gemfire Locator servers"
+      }
+    },
+    "gemfireSuperUserPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Password for administrator access to GemFire cluster"
       }
     },
     "dataDiskCount": {
@@ -538,7 +539,7 @@
           "fileUris": [
             "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' AZ_SUBSCRIPTION=', subscription().displayName, ' VM_SIZE=',parameters('vmSize'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' GEMFIRE_VERSION=', parameters('gemfireVersion'), ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' GF_SUPERUSER_PASS=', parameters('gemfireSuperUserPassword'),' AZ_SUBSCRIPTION=', subscription().displayName ,' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     }
