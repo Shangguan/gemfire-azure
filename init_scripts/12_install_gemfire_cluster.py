@@ -25,7 +25,6 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context['Servers'] = []
     context['GFPeerPassword'] = gf_superuser_pass
     context['GFAdminPassword'] = gf_superuser_pass
-    context['SecurityDiskDir'] = '/data/security'
     context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.2.jar'.format(runAsUser)
 
     for n in range(0,locators + dataNodes):
@@ -87,7 +86,7 @@ if __name__ == '__main__':
     # calculated parameters
     xmx = 7 * vmSize / 8
     xmn = xmx / 8
-    cluster_home_dir = '/home/{0}/gemfire_cluster'.format(runAsUser)
+    cluster_home_dir = '/datadisks/disk1/gemfire_cluster'
 
     # obtain runAsUser's information from the password database
     pwdentry = pwd.getpwnam(runAsUser)

@@ -1,14 +1,14 @@
 {
     "global-properties":{
-        "gemfire": "${GEMFIRE}",
-        "java-home" : "${JAVA_HOME}",
+        "gemfire": "/usr/local/gemfire",
+        "java-home" : "/usr/java/jdk1.8.0_144",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
-        "cluster-home" : "/home/{{ RunAsUser }}/gemfire_cluster",
+        "cluster-home" : "/datadisks/disk1/gemfire_cluster",
         "classpath" : "{{ GemFireClassPath }}",
         "security-manager" : "io.pivotal.pde.gemfire.dynamic.security.DynamicSecurityManager",
         "security-peer-password" : "{{ GFPeerPassword }}",
         "security-admin-password" : "{{ GFAdminPassword }}",
-        "security-disk-store-dir" : "{{ SecurityDiskDir }}",
+        "security-disk-store-dir" : "/datadisks/disk1/gemfire_cluster/data/security",
         "distributed-system-id": 1
     },
    "locator-properties" : {
