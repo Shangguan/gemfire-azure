@@ -9,8 +9,6 @@
         "security-peer-password" : "{{ GFPeerPassword }}",
         "security-admin-password" : "{{ GFAdminPassword }}",
         "security-disk-store-dir" : "{{ SecurityDiskDir }}",
-        "user": "gfpeer",
-        "password" : "{{ GFPeerPassword }}",
         "distributed-system-id": 1
     },
    "locator-properties" : {
@@ -29,6 +27,8 @@
         "jvm-options" : ["-Xmx2g","-Xms2g", "-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC" ]
     },
    "datanode-properties" : {
+       "user": "gfpeer",
+       "password" : "{{ GFPeerPassword }}",
         "conserve-sockets" : false,
         "log-level" : "config",
         "membership-port-range" : "10901-10999",
