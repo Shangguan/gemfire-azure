@@ -82,18 +82,6 @@ def parseArgs():
     if args.create_resource_group is not None and args.location is None:
         sys.exit('--location must be supplied whenever --create-resource-group is given')
 
-    if args.authentication_type == 'password' and args.admin_password is None:
-        sys.exit('--authentication_type is set as password, please specify value to  --admin_password ')
-
-    if args.authentication_type == 'password' and args.public_ssh_key_file is not None:
-        sys.exit('--authentication_type is set as password, please remove --public_ssh_key_file ')
-
-    if args.authentication_type == 'sshPublicKey' and args.public_ssh_key_file is None:
-        sys.exit('--authentication_type is set as sshPublicKey, please specify value to --public_ssh_key_file ')
-
-    if args.authentication_type == 'sshPublicKey' and args.admin_password is not None:
-        sys.exit('--authentication_type is set as sshPublicKey, please remove --admin_password argument')
-
     # May be not needed
     if args.admin_password is not None and args.public_ssh_key_file is not None:
         sys.exit('only one of --public-ssh-key-file and --admin-password can be supplied')
