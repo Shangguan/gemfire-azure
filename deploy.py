@@ -35,11 +35,6 @@ azureregions = [
   "westus2"
 ]
 
-authentication_types= [
-    "password",
-    "sshPublicKey"
-]
-
 def detect_git_branch():
     """
     returns 'master' in the event of any failure
@@ -62,7 +57,6 @@ def parseArgs():
     allgroup = parser.add_argument_group('arguments')
     allgroup.add_argument('--cluster-name', required=True, help='A unique name for the cluster.')
     allgroup.add_argument('--use-resource-group', help='The name of an existing resource group in which to deploy the GemFire cluster.')
-    allgroup.add_argument('--authentication-type', required=True, help='Authentication type for hosts.', choices = authentication_types)
     allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for "gfadmin" will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = False, help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
