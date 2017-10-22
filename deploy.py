@@ -82,7 +82,6 @@ def parseArgs():
     if args.create_resource_group is not None and args.location is None:
         sys.exit('--location must be supplied whenever --create-resource-group is given')
 
-    # May be not needed
     if args.admin_password is not None and args.public_ssh_key_file is not None:
         sys.exit('only one of --public-ssh-key-file and --admin-password can be supplied')
 
@@ -163,7 +162,7 @@ if __name__ == '__main__':
         resourcegroup = args.create_resource_group
 
     # retrieve the ssh key material
-    if args.authentication_type == 'sshPublicKey':
+    if args.public_ssh_key_file:
         sshkey = args.public_ssh_key_file.read(17384)
         args.public_ssh_key_file.close()
     else:
