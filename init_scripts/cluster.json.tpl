@@ -12,6 +12,8 @@
         "distributed-system-id": 1
     },
    "locator-properties" : {
+        "security-username": "gfpeer",
+        "security-password" : "{{ GFPeerPassword }}",
         "port" : 10000,
         "jmx-manager-port" : 11099,
         "http-service-port" : 17070,
