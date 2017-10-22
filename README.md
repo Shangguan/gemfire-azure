@@ -1,4 +1,4 @@
-![alt text](https://github.com/Pivotal-Data-Engineering/gemfire-azure/blob/master/icon_gemfire1.png "Logo")
+![alt text](https://github.com/Pivotal-Data-Engineering/gemfire-azure/blob/master/Pivotal-GemFire-Logo-FullColor.png)
 ## Pivotal GemFire On Microsoft Azure.
 
 ##### Automated provisioning of Pivotal GemFire clusters on the Microsoft Azure cloud

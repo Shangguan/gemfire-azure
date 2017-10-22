@@ -14,9 +14,6 @@
     "vmType": {
       "value": "Standard_DS13_v2"
     },
-    "vmSize": {
-      "value": "56"
-    },
     "gemfireHostsCount": {
       "value": 3
     },

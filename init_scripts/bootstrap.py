@@ -53,7 +53,7 @@ def setup_git(owner, branch, log):
         shutil.rmtree(repo_path)
         log.write(logmsg('removed existing gemfire azure repo at {0}'.format(repo_path)))
 
-    # then run git clone and git checkout0
+    # then run git clone and git checkout
     run('sudo -u {0} git clone {1}'.format(owner,GIT_URL), log, wd = '/home/' + owner)
     run('sudo -u {0} git checkout {1}'.format(owner, branch),log, wd = '/home/{0}/gemfire-azure'.format(owner))
     run('sudo -u {0} git submodule init'.format(owner),log, wd = '/home/{0}/gemfire-azure'.format(owner))

@@ -69,6 +69,7 @@ def parseArgs():
     allgroup.add_argument('--location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
+    allgroup.add_argument('--gemfire-superuser-password', required = True, help='The password for the gfadmin gemfire user')
 
     try:
         args = parser.parse_args()
@@ -86,24 +87,24 @@ def parseArgs():
 
     if args.create_resource_group is not None and args.location is None:
         sys.exit('--location must be supplied whenever --create-resource-group is given')
-        
+
     if args.authentication_type == 'password' and args.admin_password is None:
         sys.exit('--authentication_type is set as password, please specify value to  --admin_password ')
-        
+
     if args.authentication_type == 'password' and args.public_ssh_key_file is not None:
         sys.exit('--authentication_type is set as password, please remove --public_ssh_key_file ')
-        
+
     if args.authentication_type == 'sshPublicKey' and args.public_ssh_key_file is None:
         sys.exit('--authentication_type is set as sshPublicKey, please specify value to --public_ssh_key_file ')
-    
+
     if args.authentication_type == 'sshPublicKey' and args.admin_password is not None:
         sys.exit('--authentication_type is set as sshPublicKey, please remove --admin_password argument')
-    
-    # May be not needed    
+
+    # May be not needed
     if args.admin_password is not None and args.public_ssh_key_file is not None:
         sys.exit('only one of --public-ssh-key-file and --admin-password can be supplied')
-        
-        
+
+
     return args
 
 def azrun_list(cmds):
@@ -182,8 +183,8 @@ if __name__ == '__main__':
     # retrieve the ssh key material
     if args.authentication_type == 'sshPublicKey':
         sshkey = args.public_ssh_key_file.read(17384)
-        args.public_ssh_key_file.close()  
-    else:    
+        args.public_ssh_key_file.close()
+    else:
         sshkey = ''
 
     # compose the az command  sshPublicKey
@@ -191,11 +192,9 @@ if __name__ == '__main__':
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
     overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
-    overrides = overrides + ['authenticationType={0}'.format(args.authentication_type)]
-    overrides = overrides + ['adminPassword={0}'.format(args.admin_password)]
-    overrides = overrides + ['sshPublicKey={0}'.format(sshkey)]
+    overrides = overrides + ['gemfireSuperUserPassword={0}'.format(args.gemfire_superuser_password)]
+
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'mainTemplate.parameters.json')] + overrides)
     print('GemFire cluster deployed.')
-    

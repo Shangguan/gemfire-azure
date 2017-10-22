@@ -2,11 +2,13 @@ from __future__ import print_function
 import jinja2
 import os
 import os.path
+import random
 import shutil
 import pwd
+import sys
 
 def validate_env():
-    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME','VM_SIZE', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
+    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
@@ -15,6 +17,10 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context = dict()
     context['RunAsUser'] = runAsUser
     context['Servers'] = []
+    context['GFPeerPassword'] = gf_superuser_pass
+    context['GFAdminPassword'] = gf_superuser_pass
+    context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.2.jar'.format(runAsUser)
+
     for n in range(0,locators + dataNodes):
         server = dict()
         server['Hostname'] = clusterName + '-server' + str(n)
@@ -52,9 +58,9 @@ if __name__ == '__main__':
     LOCATOR_COUNT the number of locators in this cluster
     DATANODE_COUNT the  number of data nodes in this cluster
     REGION_NAME the Azure region where this cluster is deployed
-    VM_SIZE  the size in gigabytes of the VMs
     CLUSTER_NAME the name of the cluster
     AZ_SUBSCRIPTION the name of the user owning this account
+    GF_SUPERUSER_PASS  the password for the GemFire superuser
     """
     validate_env()
 
@@ -70,11 +76,12 @@ if __name__ == '__main__':
     vmSize = 56
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
+    gf_superuser_pass = os.environ['GF_SUPERUSER_PASS']
 
     # calculated parameters
     xmx = 7 * vmSize / 8
     xmn = xmx / 8
-    cluster_home_dir = '/home/{0}/gemfire_cluster'.format(runAsUser)
+    cluster_home_dir = '/datadisks/disk1/gemfire_cluster'
 
     # obtain runAsUser's information from the password database
     pwdentry = pwd.getpwnam(runAsUser)
