@@ -17,7 +17,7 @@ if __name__ == '__main__':
     validate_env()
 
     gemuser = os.environ['GEMFIRE_USER']
-    cluster_home = '/home/{0}/gemfire_cluster'.format(gemuser)
+    cluster_home = ''/datadisks/disk1/gemfire_cluster'
     java_home = '/usr/java/jdk1.8.0_144'
     gemfire = '/usr/local/gemfire'
 
