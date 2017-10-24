@@ -165,11 +165,15 @@ if __name__ == '__main__':
     if args.public_ssh_key_file:
         sshkey = args.public_ssh_key_file.read(17384)
         args.public_ssh_key_file.close()
+        authentication_type = 'sshPublicKey'
     else:
+        authentication_type = 'password'
         sshkey = ''
 
     # compose the az command  sshPublicKey
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
+    overrides = overrides + ['authenticationType={0}'.format(authentication_type)]
+    overrides = overrides + ['sshPublicKey={0}'.format(sshkey)]
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
     overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]

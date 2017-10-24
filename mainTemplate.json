@@ -460,6 +460,7 @@
         "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), copyIndex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
       ],
+      "condition": "[equals(parameters('authenticationType'),'password')]",
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[parameters('gemfireHostsCount')]"
@@ -471,7 +472,7 @@
         "osProfile": {
           "computerName": "[concat(variables('gfNodeName'), copyIndex())]",
           "adminUsername": "[parameters('adminUserName')]",
-		  "adminPassword": "[parameters('adminPassword')]",
+		      "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
 	  	},
 		"storageProfile": {
@@ -515,6 +516,70 @@
 		        }
 		      }
 		    },
+        {
+          "type": "Microsoft.Compute/virtualMachines",
+          "name": "[concat(variables('gfNodeName'), copyIndex())]",
+          "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'), copyIndex())]",
+            "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
+          ],
+          "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
+          "copy": {
+            "name": "gfNodeNicLoop",
+            "count": "[parameters('gemfireHostsCount')]"
+          },
+          "properties": {
+            "hardwareProfile": {
+              "vmSize": "[variables('gfVmSize') ]"
+            },
+            "osProfile": {
+              "computerName": "[concat(variables('gfNodeName'), copyIndex())]",
+              "adminUsername": "[parameters('adminUserName')]",
+              "linuxConfiguration": "[variables('linuxConfiguration')]"
+    	  	},
+    		"storageProfile": {
+    		          "imageReference": {
+    		            "publisher": "OpenLogic",
+    		            "offer": "CentOS",
+    		            "sku": "7.3",
+    		            "version": "latest"
+    		          },
+    		          "osDisk": {
+    		            "name": "[concat(variables('gfNodeName'), copyIndex(), '-osdisk')]",
+    		            "caching": "ReadWrite",
+    		            "createOption": "FromImage",
+    		            "managedDisk": {
+    		              "storageAccountType": "[parameters('storageAccountType')]"
+    		            }
+    		          },
+    		          "copy": [
+    		            {
+    		              "name": "dataDisks",
+    		              "count": "[parameters('dataDiskCount')]",
+    		              "input": {
+    		                "caching": "None",
+    		                "diskSizeGB": "[parameters('dataDiskSizeGB')]",
+    		                "lun": "[copyIndex('dataDisks')]",
+    		                "name": "[concat(variables('gfNodeName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+    		                "managedDisk": {
+    		                  "storageAccountType": "[parameters('storageAccountType')]"
+    		                },
+    		                "createOption": "Empty"
+    		              }
+    		            }
+    		          ]
+    		        },
+    		        "networkProfile": {
+    		          "networkInterfaces": [
+    		            {
+    		              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('networkInterfaceName'), copyIndex()))]"
+    		            }
+    		          ]
+    		        }
+    		      }
+    		    },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
