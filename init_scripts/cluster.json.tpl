@@ -6,14 +6,14 @@
         "cluster-home" : "/datadisks/disk1/gemfire_cluster",
         "classpath" : "{{ GemFireClassPath }}",
         "security-manager" : "io.pivotal.pde.gemfire.dynamic.security.DynamicSecurityManager",
-        "security-peer-password" : "{{ GFPeerPassword }}",
+        "security-peer-password" : "{{ GFAdminPassword }}",
         "security-admin-password" : "{{ GFAdminPassword }}",
         "security-disk-store-dir" : "/datadisks/disk1/gemfire_cluster/data/security",
         "distributed-system-id": 1
     },
    "locator-properties" : {
-        "security-username": "gfpeer",
-        "security-password" : "{{ GFPeerPassword }}",
+        "security-username": "gfadmin",
+        "security-password" : "{{ GFAdminPassword }}",
         "port" : 10000,
         "jmx-manager-port" : 11099,
         "http-service-port" : 17070,
@@ -29,8 +29,8 @@
         "jvm-options" : ["-Xmx2g","-Xms2g", "-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC" ]
     },
    "datanode-properties" : {
-       "user": "gfpeer",
-       "password" : "{{ GFPeerPassword }}",
+       "user": "gfadmin",
+       "password" : "{{ GFAdminPassword }}",
         "conserve-sockets" : false,
         "log-level" : "config",
         "membership-port-range" : "10901-10999",
