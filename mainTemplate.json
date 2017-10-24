@@ -584,13 +584,39 @@
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
+      "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[parameters('gemfireHostsCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex())]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex(),'-withsshkey')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.2",
+        "settings": {
+          "fileUris": [
+            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
+          ],
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('azureGemFireVersion'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' LOCATOR_COUNT=', parameters('gemfireLocatorsCount'), ' DATANODE_COUNT=', parameters('gemfireHostsCount'), ' GF_SUPERUSER_PASS=', parameters('gemfireSuperUserPassword'),' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+      "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
+      "condition": "[equals(parameters('authenticationType'),'password')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "gfNodeNicLoop",
+        "count": "[parameters('gemfireHostsCount')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex(),'-withpassword')]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
