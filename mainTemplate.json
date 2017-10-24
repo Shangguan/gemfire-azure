@@ -453,7 +453,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('gfNodeName'), copyIndex())]",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -518,7 +518,7 @@
 		    },
         {
           "type": "Microsoft.Compute/virtualMachines",
-          "name": "[concat(variables('gfNodeName'), copyIndex())]",
+          "name": "[concat(variables('gfNodeName'), copyIndex(),'-withsshkey')]",
           "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
           "location": "[resourceGroup().location]",
           "dependsOn": [
