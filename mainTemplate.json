@@ -582,7 +582,7 @@
     		    },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withsshkey','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
       "location": "[resourceGroup().location]",
@@ -607,7 +607,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('gfNodeName'), copyIndex(), '/initGemfireVMs')]",
+      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'password')]",
       "location": "[resourceGroup().location]",
