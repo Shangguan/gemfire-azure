@@ -93,6 +93,7 @@ def azrun_list(cmds):
     runs an Azure cli command and parses the results as json
     this method calls sys.exit if the command is not successful
     """
+    print('running ' + ' '.join(cmds))
     proc = subprocess.Popen(['az'] + cmds, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin = subprocess.PIPE , cwd = here)
     out, err = proc.communicate()
     if proc.returncode != 0:
