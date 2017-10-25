@@ -19,7 +19,7 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context['Servers'] = []
     context['GFPeerPassword'] = gf_superuser_pass
     context['GFAdminPassword'] = gf_superuser_pass
-    context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.4-SNAPSHOT.jar'.format(runAsUser)
+    #context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.4-SNAPSHOT.jar'.format(runAsUser)
 
     for n in range(0,locators + dataNodes):
         server = dict()
@@ -41,12 +41,14 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
 
     # render the template
     jinja2Env = jinja2.Environment(loader = jinja2.FileSystemLoader('/home/{0}/gemfire-azure/init_scripts'.format(run_as_user)), trim_blocks = True, lstrip_blocks = True)
-    tplate = jinja2Env.get_template('cluster.json.tpl')
-    tgt_file = cluster_home_dir + '/cluster.json'
-    with open(tgt_file,'w') as f:
-        tplate.stream(context).dump(f)
 
-    os.chown(tgt_file, uid,gid)
+    templates = [('cluster.json.tpl', cluster_home_dir + '/cluster.json'), ('security.json.tpl', cluster_home_dir + '/security.json')]
+    for template, tgt_file in templates:
+        tplate = jinja2Env.get_template(template)
+        with open(tgt_file,'w') as f:
+            tplate.stream(context).dump(f)
+
+        os.chown(tgt_file, uid,gid)
 
 if __name__ == '__main__':
     """
