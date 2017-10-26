@@ -4,10 +4,16 @@
         "java-home" : "/usr/java/jdk1.8.0_144",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/datadisks/disk1/gemfire_cluster",
-        "classpath" : "..",
+        "classpath" : "{{ GemFireClassPath }}",
+        "security-manager" : "io.pivotal.pde.gemfire.dynamic.security.DynamicSecurityManager",
+        "security-peer-password" : "{{ GFAdminPassword }}",
+        "security-admin-password" : "{{ GFAdminPassword }}",
+        "security-disk-store-dir" : "/datadisks/disk1/gemfire_cluster/data/security",
         "distributed-system-id": 1
     },
    "locator-properties" : {
+        "security-username": "gfadmin",
+        "security-password" : "{{ GFAdminPassword }}",
         "port" : 10000,
         "jmx-manager-port" : 11099,
         "http-service-port" : 17070,
@@ -23,6 +29,8 @@
         "jvm-options" : ["-Xmx2g","-Xms2g", "-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC" ]
     },
    "datanode-properties" : {
+       "user": "gfadmin",
+       "password" : "{{ GFAdminPassword }}",
         "conserve-sockets" : false,
         "log-level" : "config",
         "membership-port-range" : "10901-10999",
