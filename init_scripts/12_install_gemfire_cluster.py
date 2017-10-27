@@ -29,6 +29,11 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
         server['XMX'] = xmx
         server['XMN'] = xmn
         server['Roles'] = []
+
+        # assign appropriate roles to each server
+        if  n == 0:
+            server['Roles'].append('StartJMXManager')
+            
         if n < locators:
             server['Roles'].append('Locator')
         else:

@@ -46,8 +46,10 @@
                {% if "Locator" in Server.Roles  %}
                 "{{ Server.Hostname }}-locator" : {
                     "type" : "locator",
-                    "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}",
-                    "jmx-manager-start" : "true"
+                    "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}"
+                    {% if "StartJMXManager" in Server.Roles %}
+                    , "jmx-manager-start" : "true"
+                    {% endif %}
                  }
                {% endif %}
                {% if "DataNode" in Server.Roles  %}
