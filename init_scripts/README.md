@@ -3,9 +3,9 @@ have been provisioned.  The initialization process is controlled by
 _bootstrap.py_ which does the following.
 
 * installs git if it is not present
-* git clones this repository onto the a specified user's home
-directory (this user must exist) and changes the owner to the that user.
-* checks out a specified branch or tag (default is just master)
+* git clones this repository onto the specified user's home
+directory (this user must exist) and changes the owner to  that user.
+* checks out a specified branch or tag (default is  master)
 * uses input parameters to initialize a set of environment variables which
 will be passed to each script
 * runs all scripts in the _init\_scripts_ directory in sorted order
