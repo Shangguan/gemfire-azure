@@ -52,7 +52,6 @@
                {% if "Locator" in Server.Roles  %}
                 "{{ Server.Hostname }}-locator" : {
                     "type" : "locator",
-                    "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}",
                     "jmx-manager-start" : "true"
                  }
                {% endif %}
