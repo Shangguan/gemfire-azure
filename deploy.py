@@ -174,6 +174,7 @@ if __name__ == '__main__':
     # compose the az command  sshPublicKey
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
     overrides = overrides + ['authenticationType={0}'.format(authentication_type)]
+    overrides = overrides + ['adminPassword={0}'.format(args.admin_password)]
     overrides = overrides + ['sshPublicKey={0}'.format(sshkey)]
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
