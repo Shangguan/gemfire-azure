@@ -12,7 +12,7 @@
       "value": "Premium_LRS"
     },
     "vmType": {
-      "value": "Standard_DS13_v2"
+      "value": "Standard_DS5_v2"
     },
     "gemfireHostsCount": {
       "value": 3
@@ -21,10 +21,10 @@
       "value": 2
     },
     "dataDiskCount": {
-      "value": 2
+      "value": 1
     },
     "dataDiskSizeGB": {
-      "value": 1023
+      "value": 512
     },
     "networkInterfaceName": {
       "value": "gemfiredatafabric-nic"
