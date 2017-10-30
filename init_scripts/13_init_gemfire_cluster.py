@@ -30,7 +30,7 @@ if __name__ == '__main__':
     gemuser = os.environ['GEMFIRE_USER']
 
     # check to see if we are the 0th host
-    hostname = subprocess.check_output(['hostname'])
+    hostname = subprocess.check_output(['hostname']).strip()
     if hostname == clusterName + '-server0':
         cluster_home = '/datadisks/disk1/gemfire_cluster'
         java_home = '/usr/java/jdk1.8.0_144'

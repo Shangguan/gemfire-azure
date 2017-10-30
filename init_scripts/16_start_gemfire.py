@@ -46,6 +46,7 @@ if __name__ == '__main__':
 
     primary_ip = '{0}{1}'.format(private_ip_prefix,start_ip)
 
+    hostname = subprocess.check_output(['hostname']).strip()
     if hostname != clusterName + '-server0':
 
         waitforprimary()
