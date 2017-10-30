@@ -33,7 +33,7 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
         # assign appropriate roles to each server
         if  n == 0:
             server['Roles'].append('StartJMXManager')
-            
+
         if n < locators:
             server['Roles'].append('Locator')
         else:
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
-    vmSize = 56
+    vmSize = 28  #for DS4_v2
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
     gf_superuser_pass = os.environ['GF_SUPERUSER_PASS']

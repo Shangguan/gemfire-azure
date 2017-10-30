@@ -12,7 +12,7 @@
       "value": "Premium_LRS"
     },
     "vmType": {
-      "value": "Standard_DS5_v2"
+      "value": "Standard_DS4_v2"
     },
     "gemfireHostsCount": {
       "value": 3
