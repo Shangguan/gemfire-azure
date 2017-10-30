@@ -50,14 +50,16 @@
              },
              "processes" : {
                {% if "Locator" in Server.Roles  %}
-                "{{ Server.Hostname }}-locator" : {
+                "locator{{ Server.Number }}" : {
                     "type" : "locator",
-                    "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}",
-                    "jmx-manager-start" : "true"
+                    "jmx-manager-hostname-for-clients" : "{{ Server.PublicName }}"
+                    {% if "JMXManager" in Server.Roles %}
+                    ,"jmx-manager-start" : "true"
+                    {% endif %}
                  }
                {% endif %}
                {% if "DataNode" in Server.Roles  %}
-                "{{ Server.Hostname }}-datanode" : {
+                "datanode{{ Server.Number }}" : {
                     "type" : "datanode",
                     "jvm-options" : ["-Xmx{{ Server.XMX }}m","-Xms{{ Server.XMX }}m","-Xmn{{ Server.XMN }}m","-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC"]
                     {% if 'Rest' in Server.Roles %}

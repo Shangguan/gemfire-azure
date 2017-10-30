@@ -30,9 +30,15 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
         server['XMX'] = xmx
         server['XMN'] = xmn
         server['Roles'] = []
+
+        if n == 0:
+            server['Roles'].append('JMXManager')
+
         if n < locators:
             server['Roles'].append('Locator')
+            server['Number'] = n + 1
         else:
+            server['Number'] = n - locators + 1
             server['Roles'].append('DataNode')
             if n == locators:
                 server['Roles'].append("Rest")
