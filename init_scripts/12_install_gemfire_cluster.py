@@ -79,7 +79,7 @@ if __name__ == '__main__':
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
-    vmSize = 64  #for E8v3
+    vmSize = 64 * 1024  #for E8v3
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
     gf_superuser_pass = os.environ['GF_SUPERUSER_PASS']

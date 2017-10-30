@@ -12,7 +12,7 @@ def validate_env():
             sys.exit('A required environment variable is not present: ' + key)
 
 def waitforprimary():
-    for _ in range(100):
+    for _ in range(300):
         conn = httplib.HTTPConnection(primary_ip)
         try:
             conn.request('GET','/ready')
