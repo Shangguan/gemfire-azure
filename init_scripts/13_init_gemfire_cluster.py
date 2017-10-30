@@ -63,4 +63,4 @@ if __name__ == '__main__':
         sys.exit('cluster configuration import failed')
 
     # now signal readiness by starting a simple HttpServer
-    subprocess.Popen(['python', '-m', 'SimpleHttpServer', '80'], cwd=os.path.join('/home',gemuser,'gemfire-azure','init_scripts','http'))
+    subprocess.Popen(['python', '-m', 'SimpleHTTPServer', '80'], cwd=os.path.join('/home',gemuser,'gemfire-azure','init_scripts','http'))
