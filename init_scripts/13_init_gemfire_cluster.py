@@ -56,7 +56,7 @@ if __name__ == '__main__':
     gfsh = os.path.join(gemfire,'bin','gfsh')
     zipfile_name = os.path.join('/home',gemuser,'gemfire-azure','init_scripts','cluster.zip')
 
-    subprocess.call([gfsh,'-e','connect --locator=localhost[{0}]'.format(locator_port), '-e','import cluster configuration --zip-file-name={0}'.format(zipfile_name)])
+    subprocess.call([gfsh,'-e','connect --locator=localhost[{0}]'.format(locator_port), '-e','import cluster-configuration --zip-file-name={0}'.format(zipfile_name)])
     if (rc == 0):
         print('initial cluster configuration imported')
     else:
