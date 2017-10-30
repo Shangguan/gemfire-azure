@@ -1,6 +1,7 @@
 from __future__ import print_function
 import httplib
 import os
+import socket
 import subprocess
 import sys
 import time
@@ -19,6 +20,8 @@ def waitforprimary():
             if int(response.status) >= 200 and int(response.status) < 300 :
                 response.read()
                 break
+        except socket.error:
+            pass
         finally:
             conn.close()
 
