@@ -8,6 +8,7 @@ import shutil
 import pwd
 import sys
 import subprocess
+import time
 
 def validate_env():
     for key in ['GEMFIRE_USER', 'CLUSTER_NAME','GF_SUPERUSER_PASS']:
@@ -63,6 +64,9 @@ if __name__ == '__main__':
         print('initial cluster configuration imported')
     else:
         sys.exit('cluster configuration import failed')
+
+    # adding a sleep to see if this helps with our JMX Manager issues
+    time.sleep(30)
 
     # now signal readiness by starting a simple HttpServer
     subprocess.Popen(['python', '-m', 'SimpleHTTPServer', '80'], cwd=os.path.join('/home',gemuser,'gemfire-azure','init_scripts','http'))
