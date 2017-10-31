@@ -63,6 +63,7 @@ def parseArgs():
     allgroup.add_argument('--location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
+    allgroup.add_argument('--gemfire-superuser-password', required = True, help='The password for the gfadmin gemfire user')
 
     try:
         args = parser.parse_args()
@@ -178,6 +179,7 @@ if __name__ == '__main__':
     overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
     overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
     overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
+    overrides = overrides + ['gemfireSuperUserPassword={0}'.format(args.gemfire_superuser_password)]
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')

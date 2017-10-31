@@ -46,7 +46,7 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     # render the template
     jinja2Env = jinja2.Environment(loader = jinja2.FileSystemLoader('/home/{0}/gemfire-azure/init_scripts'.format(run_as_user)), trim_blocks = True, lstrip_blocks = True)
 
-    templates = [('cluster.json.tpl', cluster_home_dir + '/cluster.json')]
+    templates = [('cluster.json.tpl', cluster_home_dir + '/cluster.json'),('security.json.tpl', cluster_home_dir + '/security.json')]
     for template, tgt_file in templates:
         tplate = jinja2Env.get_template(template)
         with open(tgt_file,'w') as f:
