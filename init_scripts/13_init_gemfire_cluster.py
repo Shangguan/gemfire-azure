@@ -66,7 +66,7 @@ if __name__ == '__main__':
         sys.exit('cluster configuration import failed')
 
     # adding a sleep to see if this helps with our JMX Manager issues
-    time.sleep(30)
+    time.sleep(90)
 
     # now signal readiness by starting a simple HttpServer
     subprocess.Popen(['python', '-m', 'SimpleHTTPServer', '80'], cwd=os.path.join('/home',gemuser,'gemfire-azure','init_scripts','http'))
