@@ -7,9 +7,9 @@
         "distributed-system-id": 1
     },
    "locator-properties" : {
-        "port" : 10000,
-        "jmx-manager-port" : 11099,
-        "http-service-port" : 17070,
+        "port" : 10334,
+        "jmx-manager-port" : 1099,
+        "http-service-port" : 7070,
         "jmx-manager" : "true",
         "log-level" : "config",
         "statistic-sampling-enabled" : "true",
@@ -32,7 +32,7 @@
         "archive-file-size-limit" : "10",
         "archive-disk-space-limit" : "100",
         "tcp-port" : 10001,
-        "server-port" : 10100,
+        "server-port" : 40404,
         "gemfire.ALLOW_PERSISTENT_TRANSACTIONS" : "true",
         "locator-wait-time" : "300",
         "enable-network-partition-detection" : "true"
@@ -55,11 +55,9 @@
                {% if "DataNode" in Server.Roles  %}
                 "{{ Server.Hostname }}-datanode" : {
                     "type" : "datanode",
-                    "jvm-options" : ["-Xmx{{ Server.XMX }}m","-Xms{{ Server.XMX }}m","-Xmn{{ Server.XMN }}m","-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC"]
-                    {% if 'Rest' in Server.Roles %}
-                    , "http-service-port": 18080,
+                    "jvm-options" : ["-Xmx{{ Server.XMX }}m","-Xms{{ Server.XMX }}m","-Xmn{{ Server.XMN }}m","-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC"],
+                    "http-service-port" : 7070,
                     "start-dev-rest-api" : "true"
-                    {% endif %}
                  }
                 {% endif %}
              }

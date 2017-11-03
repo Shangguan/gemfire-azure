@@ -57,12 +57,12 @@ def parseArgs():
     allgroup = parser.add_argument_group('arguments')
     allgroup.add_argument('--cluster-name', required=True, help='A unique name for the cluster.')
     allgroup.add_argument('--use-resource-group', help='The name of an existing resource group in which to deploy the GemFire cluster.')
-    allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for "gfadmin" will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
+    allgroup.add_argument('--admin-username', required=True, help='The username for SSH access to the deployed virtual machines')
+    allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for <admin-username> will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = False, help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
     allgroup.add_argument('--location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
-    allgroup.add_argument('--locator-count', type=int, default = 2, choices=range(1,3), help='Number of locators that will be deployed.The default is 2.')
 
     try:
         args = parser.parse_args()
@@ -172,14 +172,14 @@ if __name__ == '__main__':
 
     # compose the az command  sshPublicKey
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
-    overrides = overrides + ['authenticationType={0}'.format(authentication_type)]
-    overrides = overrides + ['adminPassword={0}'.format(args.admin_password)]
-    overrides = overrides + ['sshPublicKey={0}'.format(sshkey)]
-    overrides = overrides + ['azureGemFireVersion={0}'.format(detect_git_branch())]
-    overrides = overrides + ['gemfireHostsCount={0}'.format(args.datanode_count + args.locator_count)]
-    overrides = overrides + ['gemfireLocatorsCount={0}'.format(args.locator_count)]
+    overrides.append('adminUserName={0}'.format(args.admin_username))
+    overrides.append('authenticationType={0}'.format(authentication_type))
+    overrides.append('adminPassword={0}'.format(args.admin_password))
+    overrides.append('sshPublicKey={0}'.format(sshkey))
+    overrides.append('gemfireDatanodeCount={0}'.format(args.datanode_count))
+    overrides.append('gemfireOnAzureProjectTag={0}'.format(detect_git_branch()))
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
-    azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json'), '--resource-group', resourcegroup, '--parameters', os.path.join(here,'mainTemplate.parameters.json')] + overrides)
+    azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json'), '--resource-group', resourcegroup] + overrides)
     print('GemFire cluster deployed.')

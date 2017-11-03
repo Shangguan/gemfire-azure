@@ -8,8 +8,8 @@
         "name": "clusterName",
         "type": "Microsoft.Common.TextBox",
         "label": "Cluster name (3-12 letters or numbers)",
-        "toolTip": "Cluster name will be used as prefix for most resources created for this cluster",
-        "defaultValue": "gdatafabric",
+        "toolTip": "Cluster name will be used as prefix for most resources created for this cluster and must be unique within your account.",
+        "defaultValue": "testcluster",
         "constraints": {
           "required": true,
           "regex": "^[a-z0-9]{3,12}$",
@@ -19,13 +19,13 @@
       {
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
-        "label": "VM Admin Username",
+        "label": "Admin Username",
         "toolTip": "Username to use for SSH access to the virtual machines",
         "defaultValue": "gfadmin",
         "constraints": {
           "required": true,
           "regex": "^[a-z0-9]{3,12}$",
-          "validationMessage": "You cannot use username gfadmin for the primary SSH user. gfadmin user will be created automatically during deployment"
+          "validationMessage": "Admin Username must be 3 to 12 alphanumeric characters"
         },
         "osPlatform": "Linux"
       },
@@ -40,8 +40,8 @@
 	          },
 	          "toolTip": {
 	            "authenticationType": "Which authentication type to use when connecting to the virtual machines: Password or SSH Public Key",
-	            "password": "Admin password for the virtual machines",
-	            "sshPublicKey": "SSH public key that will be included on all nodes in the cluster. The OpenSSH public key can be generated with tools like ssh-keygen on Linux or OS X."
+	            "password": "Password to use for SSH access to the virtual machines",
+	            "sshPublicKey": "Public key for passwordless SSH access to the virtual machines. The OpenSSH public key can be generated with tools like ssh-keygen on Linux or OS X."
 	          },
 	          "constraints": {
 	            "required": true
@@ -50,24 +50,13 @@
 	            "hideConfirmation": false
 	          },
 	          "osPlatform": "Linux"
-	        }
-    ],
-    "steps": [
-      {
-        "name": "clusterConfig",
-        "label": "Gemfire Config",
-        "subLabel": {
-          "preValidation": "Configure Gemfire",
-          "postValidation": "Done"
-        },
-        "bladeTitle": "Gemfire Settings",
-        "elements": [
+	        },
           {
-            "name": "gemfireHostsCount",
+            "name": "gemfireDatanodeCount",
             "type": "Microsoft.Common.DropDown",
-            "label": "Number of Servers",
+            "label": "Number of Data Nodes",
             "defaultValue": "2",
-            "toolTip": "The number of virtual machines to provision for the servers in this cluster.",
+            "toolTip": "Each data node will have 40G storage capacity and you should have at least 2 for fault tolerance",
             "constraints": {
               "allowedValues": [
                 {
@@ -89,31 +78,50 @@
                 {
                   "label": "6",
                   "value": 6
+                },
+                {
+                  "label": "7",
+                  "value": 7
+                },
+                {
+                  "label": "8",
+                  "value": 8
+                },
+                {
+                  "label": "9",
+                  "value": 9
+                },
+                {
+                  "label": "10",
+                  "value": 10
                 }
               ]
             }
           },
           {
-            "name": "gemfireLocatorsCount",
-            "type": "Microsoft.Common.DropDown",
-            "label": "Number of locators",
-            "defaultValue": "1",
-            "toolTip": "The number of locators run for the servers in this cluster.",
+            "name": "allowedInboundIPAddressCIDR",
+            "type": "Microsoft.Common.TextBox",
+            "label": "GemFire on Azure Project Version",
+            "toolTip": "Optionally restrict inbound connections to a source ip address range specified with a CIDR block",
+            "defaultValue": "0.0.0.0/0",
             "constraints": {
-              "allowedValues": [
-                {
-                  "label": "1",
-                  "value": 1
-                },
-                {
-                  "label": "2",
-                  "value": 2
-                }
-              ]
+              "required": true,
+              "regex": "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\\\[0-9]{1,3}$",
+              "validationMessage": "Please provide a valid CIDR block"
             }
-          }
-        ]
-      }
+          },
+          {
+            "name": "gemfireOnAzureProjectTag",
+            "type": "Microsoft.Common.TextBox",
+            "label": "GemFire on Azure Project Version",
+            "toolTip": "The version of the GemFire on Azure project to use for this deployments.  The default value, 'master' points to the latest release",
+            "defaultValue": "master",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-zA-Z0-9-_.]{3,64}$",
+              "validationMessage": "GemFire Azure project version must be between 3 and 64 characters in length and may contain numbers, letters , hyphens, underscores and periods"
+            }
+          },
     ],
     "outputs": {
       "clusterName": "[basics('clusterName')]",
@@ -121,8 +129,7 @@
 	  "adminPassword": "[basics('adminCredentials').password]",
 	  "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 	  "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "gemfireHostsCount": "[steps('clusterConfig').gemfireHostsCount]",
-      "gemfireLocatorsCount": "[steps('clusterConfig').gemfireLocatorsCount]"
+      "gemfireDatanodeCount": "[steps('clusterConfig').gemfireDatanodeCount]",
     }
   }
 }
