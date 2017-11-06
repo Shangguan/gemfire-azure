@@ -17,8 +17,10 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     context = dict()
     context['RunAsUser'] = runAsUser
     context['Servers'] = []
-    context['GFPeerPassword'] = gf_superuser_pass
-    context['GFAdminPassword'] = gf_superuser_pass
+
+    # these are used with a secure cluster
+    # context['GFPeerPassword'] = gf_superuser_pass
+    # context['GFAdminPassword'] = gf_superuser_pass
 
     for n in range(0,locators + dataNodes):
         server = dict()
@@ -66,7 +68,6 @@ if __name__ == '__main__':
     REGION_NAME the Azure region where this cluster is deployed
     CLUSTER_NAME the name of the cluster
     AZ_SUBSCRIPTION the name of the user owning this account
-    GF_SUPERUSER_PASS  the password for the GemFire superuser
     """
     validate_env()
 
@@ -82,7 +83,9 @@ if __name__ == '__main__':
     vmSize = 28 * 1024  #for D12sv2
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
-    gf_superuser_pass = os.environ['GF_SUPERUSER_PASS']
+
+    # used for security
+    #gf_superuser_pass = os.environ['GF_SUPERUSER_PASS']
 
     # calculated parameters
     xmx = 7 * vmSize / 8
