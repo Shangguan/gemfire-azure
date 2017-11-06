@@ -559,7 +559,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
+            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('gemfireOnAzureProjectTag'),'/init_scripts/bootstrap.py')]"
           ],
           "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
@@ -584,7 +584,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('azureGemFireVersion'),'/init_scripts/bootstrap.py')]"
+            "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('gemfireOnAzureProjectTag'),'/init_scripts/bootstrap.py')]"
           ],
           "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
