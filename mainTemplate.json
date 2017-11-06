@@ -78,7 +78,7 @@
       "metadata": {
         "description": "The version of the GemFire on Azure project to use for this deployments.  The default value, 'master' points to the latest release"
       }
-    },
+    }
   },
   "variables": {
     "apiVersions": {
