@@ -2,7 +2,7 @@
     "global-properties":{
         "gemfire": "/usr/local/gemfire",
         "java-home" : "/usr/java/jdk1.8.0_144",
-        "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10000]{% if not loop.last -%},{%- endif %}{%- endfor %}",
+        "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10334]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/datadisks/disk1/gemfire_cluster",
         "distributed-system-id": 1
     },
