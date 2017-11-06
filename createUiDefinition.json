@@ -56,7 +56,7 @@
             "type": "Microsoft.Common.DropDown",
             "label": "Number of Data Nodes",
             "defaultValue": "2",
-            "toolTip": "Each data node will have 40G storage capacity and you should have at least 2 for fault tolerance",
+            "toolTip": "Each data node will have 17G storage capacity and you should have at least 2 for fault tolerance",
             "constraints": {
               "allowedValues": [
                 {

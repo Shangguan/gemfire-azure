@@ -200,7 +200,7 @@
     "subnetName" : "gemfiredatafabric-subnet",
     "publicIpAddressName" : "gemfiredatafabric-publicip",
     "gemfireOnAzureProjectTag" : "develop",
-    "datanodeVmSize": "Standard_E8s_v3",
+    "datanodeVmSize": "Standard_D12s_v2",
     "gemfireHostCount" : "[ add(2, parameters('gemfireDatanodeCount')) ]",
     "gemfireDatanodeCount" : "[ parameters('gemfireDatanodeCount') ]",
     "gemfireLocatorCount" : 2,
