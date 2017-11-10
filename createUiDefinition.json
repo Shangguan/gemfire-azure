@@ -109,18 +109,6 @@
               "regex": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
               "validationMessage": "Please provide a valid CIDR block"
             }
-          },
-          {
-            "name": "gemfireOnAzureProjectTag",
-            "type": "Microsoft.Common.TextBox",
-            "label": "GemFire on Azure Project Version",
-            "toolTip": "The version of the GemFire on Azure project to use for this deployments.  The default value, 'master' points to the latest release",
-            "defaultValue": "master",
-            "constraints": {
-              "required": true,
-              "regex": "^[a-zA-Z0-9-_.]{3,64}$",
-              "validationMessage": "GemFire Azure project version must be between 3 and 64 characters in length and may contain numbers, letters , hyphens, underscores and periods"
-            }
           }
     ],
     "steps" : [],
@@ -132,7 +120,7 @@
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "[basics('gemfireOnAzureProjectTag')]"
+      "gemfireOnAzureProjectTag" : "master"
     }
   }
 }
