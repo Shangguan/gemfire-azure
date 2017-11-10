@@ -101,7 +101,7 @@
           {
             "name": "allowedInboundIPAddressCIDR",
             "type": "Microsoft.Common.TextBox",
-            "label": "GemFire on Azure Project Version",
+            "label": "Inbound Connection Restriction",
             "toolTip": "Optionally restrict inbound connections to a source ip address range specified with a CIDR block",
             "defaultValue": "0.0.0.0/0",
             "constraints": {
@@ -127,10 +127,12 @@
     "outputs": {
       "clusterName": "[basics('clusterName')]",
       "adminUsername": "[basics('adminUsername')]",
-	  "adminPassword": "[basics('adminCredentials').password]",
-	  "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
-	  "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "gemfireDatanodeCount": "[steps('clusterConfig').gemfireDatanodeCount]"
+	    "adminPassword": "[basics('adminCredentials').password]",
+	    "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
+	    "authenticationType": "[basics('adminCredentials').authenticationType]",
+      "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
+      "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
+      "gemfireOnAzureProjectTag" : "[basics('gemfireOnAzureProjectTag')]"
     }
   }
 }
