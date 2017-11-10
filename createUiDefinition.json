@@ -121,7 +121,7 @@
               "regex": "^[a-zA-Z0-9-_.]{3,64}$",
               "validationMessage": "GemFire Azure project version must be between 3 and 64 characters in length and may contain numbers, letters , hyphens, underscores and periods"
             }
-          },
+          }
     ],
     "steps" : [],
     "outputs": {
@@ -130,7 +130,7 @@
 	  "adminPassword": "[basics('adminCredentials').password]",
 	  "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 	  "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "gemfireDatanodeCount": "[steps('clusterConfig').gemfireDatanodeCount]",
+      "gemfireDatanodeCount": "[steps('clusterConfig').gemfireDatanodeCount]"
     }
   }
 }
