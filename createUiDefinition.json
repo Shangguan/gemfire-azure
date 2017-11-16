@@ -9,7 +9,6 @@
         "type": "Microsoft.Common.TextBox",
         "label": "Cluster name (3-12 letters or numbers)",
         "toolTip": "Cluster name will be used as prefix for most resources created for this cluster and must be unique within your account.",
-        "defaultValue": "testcluster",
         "constraints": {
           "required": true,
           "regex": "^[a-z0-9]{3,12}$",
@@ -113,6 +112,7 @@
     ],
     "steps" : [],
     "outputs": {
+      "location" : "[location()]",
       "clusterName": "[basics('clusterName')]",
       "adminUsername": "[basics('adminUsername')]",
 	    "adminPassword": "[basics('adminCredentials').password]",
@@ -120,7 +120,7 @@
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "master"
+      "gemfireOnAzureProjectTag" : "${gemfireOnAzureProjectTag}"
     }
   }
 }

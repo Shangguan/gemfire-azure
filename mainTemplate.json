@@ -11,6 +11,39 @@
         "description": "Provider tags"
       }
     },
+    "location" : {
+        "type" : "string",
+        "metadata": {
+          "description": "The location where resources will be deployed (may be different from resource group location)"
+        },
+        "allowedValues" : [
+          "australiaeast",
+          "australiasoutheast",
+          "brazilsouth",
+          "canadacentral",
+          "canadaeast",
+          "centralindia",
+          "centralus",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "japaneast",
+          "japanwest",
+          "koreacentral",
+          "koreasouth",
+          "northcentralus",
+          "northeurope",
+          "southcentralus",
+          "southeastasia",
+          "southindia",
+          "uksouth",
+          "ukwest",
+          "westcentralus",
+          "westeurope",
+          "westus",
+          "westus2"
+        ]
+    },
     "clusterName": {
       "type": "string",
       "metadata": {
@@ -102,95 +135,6 @@
         "disks": "2016-04-30-preview"
       }
     },
-    "faultdomainCountMap": {
-      "eastus": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "eastus2": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "westus": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "centralus": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "northcentralus": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "southcentralus": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "northeurope": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "westeurope": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "eastasia": {
-        "maximumPlatformFaultDomainCount": 3
-      },
-      "southeastasia": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "japaneast": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "japanwest": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "australiaeast": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "australiasoutheast": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "brazilsouth": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "southindia": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "centralindia": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "canadacentral": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "canadaeast": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "westus2": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "westcentralus": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "uksouth": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "ukwest": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "koreacentral": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "koreasouth": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "eastus2euap": {
-        "maximumPlatformFaultDomainCount": 2
-      },
-      "centraluseuap": {
-        "maximumPlatformFaultDomainCount": 1
-      }
-    },
-    "gfAvailabilitySetSettings": {
-      "name": "[concat(parameters('clusterName'),'-avs')]",
-      "faultDomainCount": "[variables('faultdomainCountMap')[tolower(replace(resourceGroup().location,' ',''))].maximumPlatformFaultDomainCount]",
-      "updateDomainCount": "5",
-      "managed": true
-    },
     "storageAccountType" : "Premium_LRS",
     "networkInterfaceName" : "gemfiredatafabric-nic",
     "virtualNetworkName" : "gemfiredatafabric-vnet",
@@ -231,7 +175,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[ concat( variables('gfstorageAccountName'), copyIndex() )]",
       "apiVersion": "[variables('apiVersions').storage.storageAccounts]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "copy": {
         "name": "storageAccountLoop",
         "count": "[variables('gemfireHostCount')]"
@@ -249,7 +193,7 @@
       "apiVersion": "[variables('apiVersions').network.networkSecurityGroups]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('gfSecurityGroupName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "tags": {
         "provider": "[toUpper(parameters('pivotalTags').provider)]"
       },
@@ -332,7 +276,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[ variables('virtualNetworkName')]",
       "apiVersion": "[variables('apiVersions').network.virtualNetworks]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('gfSecurityGroupName'))]"
       ],
@@ -363,7 +307,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[ concat( variables('publicIpAddressName'), copyIndex() ) ]",
       "apiVersion": "[variables('apiVersions').network.publicIPAddresses]",
-      "location": "[ resourceGroup().location ]",
+      "location": "[ parameters('location') ]",
       "copy": {
         "name": "pubIpLoop",
         "count": "[variables('gemfireHostCount')]"
@@ -379,7 +323,7 @@
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('networkInterfaceName'), copyIndex())]",
       "apiVersion": "[variables('apiVersions').network.networkInterfaces]",
-      "location": "[ resourceGroup().location ]",
+      "location": "[ parameters('location') ]",
       "dependsOn": [
         "[concat ('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
       ],
@@ -415,7 +359,7 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'), copyIndex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
@@ -480,7 +424,7 @@
           "type": "Microsoft.Compute/virtualMachines",
           "name": "[concat(variables('gfNodeName'), copyIndex(),'-withsshkey')]",
           "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
-          "location": "[resourceGroup().location]",
+          "location": "[parameters('location')]",
           "dependsOn": [
             "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'), copyIndex())]",
             "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
@@ -545,7 +489,7 @@
       "name": "[concat(variables('gfNodeName'), copyIndex(), '-withsshkey','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
@@ -561,7 +505,7 @@
           "fileUris": [
             "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('gemfireOnAzureProjectTag'),'/init_scripts/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     },
@@ -570,7 +514,7 @@
       "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'password')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
@@ -586,10 +530,11 @@
           "fileUris": [
             "[concat('https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/',parameters('gemfireOnAzureProjectTag'),'/init_scripts/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', resourceGroup().location, ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+  }
 }

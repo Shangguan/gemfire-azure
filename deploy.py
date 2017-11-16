@@ -61,7 +61,8 @@ def parseArgs():
     allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for <admin-username> will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
     allgroup.add_argument('--public-ssh-key-file',type=argparse.FileType('rb'), required = False, help='The path to a file containing the public half of the ssh key you will use to access the servers. May be .pub or .pem')
     allgroup.add_argument('--create-resource-group', help='The name of a new resource group.  The GemFire cluster will be deployed in this group after it is created. This option is incompatible with --use-resource-group.')
-    allgroup.add_argument('--location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
+    allgroup.add_argument('--resource-group-location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
+    allgroup.add_argument('--resource-location', required=True,  help='The Azure location where the new resources will be created.  This is separate from the location of the resource group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
 
     try:
@@ -78,8 +79,8 @@ def parseArgs():
     if args.use_resource_group is not None and args.create_resource_group is not None:
         sys.exit('only one of  --use-resource-group and  --create_resource_group can be supplied')
 
-    if args.create_resource_group is not None and args.location is None:
-        sys.exit('--location must be supplied whenever --create-resource-group is given')
+    if args.create_resource_group is not None and args.resource_group_location is None:
+        sys.exit('--resource_group_location must be supplied whenever --create-resource-group is given')
 
     if args.admin_password is not None and args.public_ssh_key_file is not None:
         sys.exit('only one of --public-ssh-key-file and --admin-password can be supplied')
@@ -158,7 +159,7 @@ if __name__ == '__main__':
         if resource_group_exists(args.create_resource_group):
             sys.exit('Cannot create the resource group ({0}) because it already exists'.format(args.create_resource_group))
 
-        create_resource_group(args.create_resource_group, args.location)
+        create_resource_group(args.create_resource_group, args.resource_group_location)
         resourcegroup = args.create_resource_group
 
     # retrieve the ssh key material
@@ -178,6 +179,7 @@ if __name__ == '__main__':
     overrides.append('sshPublicKey={0}'.format(sshkey))
     overrides.append('gemfireDatanodeCount={0}'.format(args.datanode_count))
     overrides.append('gemfireOnAzureProjectTag={0}'.format(detect_git_branch()))
+    overrides.append('location={0}'.format(args.resource_location))
 
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
