@@ -70,7 +70,7 @@ def parseArgs():
     allgroup.add_argument('--resource-group-location', help='The Azure location where the new resource group will be created.  This option must be supplied if --create-resource-group is supplied.This option is incompatible with --use-resource-group.', choices = azureregions)
     allgroup.add_argument('--resource-location', required=True,  help='The Azure location where the new resources will be created.  This is separate from the location of the resource group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
-    allgroup.add_argument('--vmtype', type=String, required = True, default="Standard_DS3_v2", choices=vmtypes, help='Azure VM Type')
+    allgroup.add_argument('--vmtype', required = False, default="Standard_DS3_v2", choices=vmtypes, help='Azure VM Type')
 
     try:
         args = parser.parse_args()
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     overrides.append('gemfireDatanodeCount={0}'.format(args.datanode_count))
     overrides.append('gemfireOnAzureProjectTag={0}'.format(detect_git_branch()))
     overrides.append('location={0}'.format(args.resource_location))
-    overrides.append('datanodeVmType={0}'.args.vmtype)
+    overrides.append('datanodeVmType={0}'.format(args.vmtype))
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json')] + overrides)
