@@ -13,7 +13,7 @@
           "required": true,
           "regex": "^[a-z0-9]{3,12}$",
           "validationMessage": "Cluster name between 3 and 10 characters long and can contain only numbers and lowercase letters"
-        }
+        } 
       },
       {
         "name": "adminUsername",
@@ -137,7 +137,7 @@
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "${gemfireOnAzureProjectTag}"
+      "gemfireOnAzureProjectTag" : "1.0.0"
     }
   }
 }
