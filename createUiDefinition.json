@@ -51,6 +51,23 @@
 	          "osPlatform": "Linux"
 	        },
           {
+            "name": "vmType",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Size",
+            "toolTip": "Premium storage capable instances with at least 4 cores are recommended",
+            "recommendedSizes": [
+              "Standard_DS3_v2",
+              "Standard_DS4_v2",
+              "Standard_DS4_v2"
+            ],
+            "constraints": {
+              "allowedSizes": [
+              ],
+              "excludedSizes": []
+            },
+            "osPlatform": "Linux"
+          },
+          {
             "name": "gemfireDatanodeCount",
             "type": "Microsoft.Common.DropDown",
             "label": "Number of Data Nodes",
