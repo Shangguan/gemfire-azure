@@ -13,7 +13,7 @@
           "required": true,
           "regex": "^[a-z0-9]{3,12}$",
           "validationMessage": "Cluster name between 3 and 10 characters long and can contain only numbers and lowercase letters"
-        } 
+        }
       },
       {
         "name": "adminUsername",
@@ -58,7 +58,7 @@
             "recommendedSizes": [
               "Standard_DS3_v2",
               "Standard_DS4_v2",
-              "Standard_DS4_v2"
+              "Standard_DS5_v2"
             ],
             "constraints": {
               "allowedSizes": [
@@ -136,6 +136,7 @@
 	    "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
+      "datanodeVmType" : "[basics('vmType')]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
       "gemfireOnAzureProjectTag" : "1.0.0"
     }

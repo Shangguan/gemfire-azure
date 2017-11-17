@@ -7,6 +7,16 @@ import shutil
 import pwd
 import sys
 
+def total_mem_megs():
+	with open('/proc/meminfo','r') as f:
+		meminfo = f.read()
+
+    lines = meminfo.splitlines()
+	theline = [l for l in lines if l.find('MemTotal') >= 0][0]
+	memstr = theline.split()[1]
+    megs = int(memstr)/1000
+    return megs
+
 def validate_env():
     for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
         if key not in os.environ:
@@ -80,7 +90,7 @@ if __name__ == '__main__':
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
-    vmSize = 28 * 1024  #for D12sv2
+    vmSize = total_mem_megs()
     az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
 

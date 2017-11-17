@@ -44,6 +44,12 @@
           "westus2"
         ]
     },
+    "datanodeVmType" : {
+        "type" : "string",
+        "metadata": {
+          "description": "The Azure VM Type to use for all Vms in this cluster"
+        }
+    },
     "clusterName": {
       "type": "string",
       "metadata": {
@@ -144,7 +150,7 @@
     "subnetName" : "gemfiredatafabric-subnet",
     "publicIpAddressName" : "gemfiredatafabric-publicip",
     "gemfireOnAzureProjectTag" : "develop",
-    "datanodeVmSize": "Standard_DS12_v2",
+    "datanodeVmSize": "[ parameters('datanodeVmType') ]",
     "gemfireHostCount" : "[ add(2, parameters('gemfireDatanodeCount')) ]",
     "gemfireDatanodeCount" : "[ parameters('gemfireDatanodeCount') ]",
     "gemfireLocatorCount" : 2,
@@ -536,5 +542,9 @@
     }
   ],
   "outputs": {
+    "pulseURL" : {
+      "type" : "string",
+      "value": "http://thisiscollosal.com"
+    }
   }
 }
