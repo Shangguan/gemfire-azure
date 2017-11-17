@@ -120,7 +120,7 @@
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "${gemfireOnAzureProjectTag}"
+      "gemfireOnAzureProjectTag" : "1.0.0"
     }
   }
 }
