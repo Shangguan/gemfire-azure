@@ -544,7 +544,7 @@
   "outputs": {
     "pulseURL" : {
       "type" : "string",
-      "value": "http://thisiscollosal.com"
+      "value": ""
     }
   }
 }
