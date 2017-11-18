@@ -14,8 +14,8 @@ def total_mem_megs():
 	lines = meminfo.splitlines()
 	theline = [l for l in lines if l.find('MemTotal') >= 0][0]
 	memstr = theline.split()[1]
-	megs = int(memstr)/1000
-	return megs
+	return int(memstr)/1000
+
 
 def validate_env():
     for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
