@@ -178,14 +178,20 @@ if __name__ == '__main__':
         authentication_type = 'password'
         sshkey = ''
 
+    # generate artifactsBaseUrl and gemfireOnAzureProjectTag
+    gitbranch = detect_git_branch()
+    artifactsBaseUrl = 'https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/' + gitbranch
+
     # compose the az command  sshPublicKey
+
     overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
     overrides.append('adminUserName={0}'.format(args.admin_username))
     overrides.append('authenticationType={0}'.format(authentication_type))
     overrides.append('adminPassword={0}'.format(args.admin_password))
     overrides.append('sshPublicKey={0}'.format(sshkey))
     overrides.append('gemfireDatanodeCount={0}'.format(args.datanode_count))
-    overrides.append('gemfireOnAzureProjectTag={0}'.format(detect_git_branch()))
+    overrides.append('gemfireOnAzureProjectTag={0}'.format(gitbranch))
+    overrides.append('artifactsBaseUrl={0}'.format(artifactsBaseUrl))
     overrides.append('location={0}'.format(args.resource_location))
     overrides.append('datanodeVmType={0}'.format(args.vmtype))
 
