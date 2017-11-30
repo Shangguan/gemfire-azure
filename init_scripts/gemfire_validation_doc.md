@@ -28,11 +28,11 @@ STEP 2 - Start gfsh by running gfsh at the command prompt
 Monitor and Manage Pivotal GemFire
 ******************************************************************************************************
 STEP 3 - Connect to a Gemfire locator
-   gfsh>connect --locator=rmpgf9-server0.eastus.cloudapp.azure.com[10000]
+   gfsh>connect --locator=rmpgf9-server0.eastus.cloudapp.azure.com[10334]
    
-   Connecting to Locator at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=10000]
-   Connecting to Manager at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=11099]
-   Successfully connected to: [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=11099]
+   Connecting to Locator at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=10334]
+   Connecting to Manager at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=1099]
+   Successfully connected to: [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=1099]
 ******************************************************************************************************
 STEP 4 - List Gemfire Members
    Cluster-1 gfsh>list members
@@ -117,6 +117,6 @@ GEMFIRE PULSE
       http://gemfire.docs.pivotal.io/geode/tools_modules/pulse/pulse-overview.html
 
    Launch Pulse from your web browser and login using the DNS name of your VM. For example:
-      http://rmpgf9-server0.eastus.cloudapp.azure.com:17070/pulse/login.html
+      http://rmpgf9-server0.eastus.cloudapp.azure.com:7070/pulse/login.html
       Default UserID/PWD: admin/admin
 ******************************************************************************************************

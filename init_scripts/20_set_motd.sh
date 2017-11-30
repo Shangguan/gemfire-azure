@@ -35,7 +35,7 @@ Connect to Gemfire cli
    - As user gfadmin, from the Linux command prompt:  gfsh
 
 Connect to Gemfire Pulse
-     http://[server0_ip_or_dns_name]:17070/pulse
+     http://[server0_ip_or_dns_name]:7070/pulse
      User ID and PWD: admin/admin
 
 Gemfire Documentation

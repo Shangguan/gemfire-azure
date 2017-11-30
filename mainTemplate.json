@@ -11,19 +11,25 @@
         "description": "Provider tags"
       }
     },
-    "artifactsBaseUrl" : {
-      "type" : "string",
-      "defaultValue" : "https://raw.githubusercontent.com/Pivotal-Data-Engineering/gemfire-azure/1.0.0",
-      "metadata": {
-        "description": "Location from which bootstrap will be downloaded"
-      }
-    },
     "location" : {
         "type" : "string",
         "metadata": {
           "description": "The location where resources will be deployed (may be different from resource group location)"
         }
     },
+    "artifactsBaseUrl" : {
+      "type" : "string",
+      "metadata": {
+        "description": "Location from which bootstrap will be downloaded",
+        "artifactsBaseUrl" : ""
+      }
+    },
+    "gemfireOnAzureProjectTag": {
+      "type": "string",
+      "defaultValue" : "1.0.0",
+      "metadata": {
+        "description": "The version of the GemFire on Azure project to use for this deployments."
+      },
     "datanodeVmType" : {
         "type" : "string",
         "metadata": {
@@ -89,13 +95,6 @@
       ],
       "metadata": {
         "description": "The number of datanodesto provision in the GemFire cluster"
-      }
-    },
-    "gemfireOnAzureProjectTag": {
-      "type": "string",
-      "defaultValue" : "1.0.0",
-      "metadata": {
-        "description": "The version of the GemFire on Azure project to use for this deployments."
       }
     }
   },
@@ -488,7 +487,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "[concat(parameters('artifactsBaseUrl'),'/init_scripts/bootstrap.py')]"
+            "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
           "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
@@ -513,7 +512,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": [
-            "[concat(parameters('artifactsBaseUrl'),'/init_scripts/bootstrap.py')]"
+            "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
           "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
@@ -521,5 +520,8 @@
     }
   ],
   "outputs": {
+    "pulseURL" : "[toLower(concat('http://',variables('gfNodeName'), '0-', replace(subscription().displayName, ' ','') ) )]",
+    "locator1" : "[toLower(concat(variables('gfNodeName'), '0-', replace(subscription().displayName, ' ',''),'[10334]' ) )]",
+    "locator2" : "[toLower(concat(variables('gfNodeName'), '1-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
   }
 }
