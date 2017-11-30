@@ -153,7 +153,8 @@
             }
           },
     "linuxConfiguration_password": {},
-    "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]"
+    "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]",
+    "subname" : "[replace(subscription().displayName, ' ','')]"
   },
   "resources": [
     {
@@ -300,7 +301,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-', replace(subscription().displayName, ' ','') ) )]"
+          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-', variables('subname') ) )]"
         }
       }
     },
@@ -490,7 +491,7 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', variables('subname'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     },
@@ -515,7 +516,7 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', replace(subscription().displayName,' ',''),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', variables('subname'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     }
@@ -523,15 +524,15 @@
   "outputs": {
     "pulseURL" : {
       "type":"string",
-      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', replace(subscription().displayName, ' ','') ) )]"
+      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', variables('subname'),':7070/pulse (login with admin/admin)' ) )]"
     },
     "locator1" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '0-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
+      "value": "[toLower(concat(variables('gfNodeName'), '0-', variables('subname'),'[10334]' ) )]"
     },
     "locator2" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '1-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
+      "value": "[toLower(concat(variables('gfNodeName'), '1-', variables('subname'),'[10334]' ) )]"
     }
   }
 }
