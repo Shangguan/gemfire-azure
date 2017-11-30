@@ -518,10 +518,20 @@
         }
       }
     }
-  ],
+  ]
+},
   "outputs": {
-    "pulseURL" : "[toLower(concat('http://',variables('gfNodeName'), '0-', replace(subscription().displayName, ' ','') ) )]",
-    "locator1" : "[toLower(concat(variables('gfNodeName'), '0-', replace(subscription().displayName, ' ',''),'[10334]' ) )]",
-    "locator2" : "[toLower(concat(variables('gfNodeName'), '1-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
+    "pulseURL" : {
+      "type":"string",
+      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', replace(subscription().displayName, ' ','') ) )]"
+    },
+    "locator1" : {
+      "type":"string",
+      "value": "[toLower(concat(variables('gfNodeName'), '0-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
+    },
+    "locator2" : {
+      "type":"string",
+      "value": "[toLower(concat(variables('gfNodeName'), '1-', replace(subscription().displayName, ' ',''),'[10334]' ) )]"
+    }
   }
 }
