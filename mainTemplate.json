@@ -29,7 +29,8 @@
       "defaultValue" : "1.0.0",
       "metadata": {
         "description": "The version of the GemFire on Azure project to use for this deployments."
-      },
+      }
+    },
     "datanodeVmType" : {
         "type" : "string",
         "metadata": {
@@ -518,8 +519,7 @@
         }
       }
     }
-  ]
-},
+  ],
   "outputs": {
     "pulseURL" : {
       "type":"string",
