@@ -524,15 +524,19 @@
   "outputs": {
     "pulseURL" : {
       "type":"string",
-      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', variables('subname'),':7070/pulse (login with admin/admin)' ) )]"
+      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com',':7070/pulse' ) )]"
+    },
+    "pulseLogin" : {
+      "type":"string",
+      "value": "admin/admin"
     },
     "locator1" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '0-', variables('subname'),'[10334]' ) )]"
+      "value": "[toLower(concat(variables('gfNodeName'), '0-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com','[10334]' ) )]"
     },
     "locator2" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '1-', variables('subname'),'[10334]' ) )]"
+      "value": "[toLower(concat(variables('gfNodeName'), '1-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com','[10334]' ) )]"
     }
   }
 }
