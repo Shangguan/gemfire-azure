@@ -524,7 +524,7 @@
   "outputs": {
     "pulseURL" : {
       "type":"string",
-      "value": "[toLower(concat('http://',variables('gfNodeName'), '0-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com',':7070/pulse' ) )]"
+      "value": "[toLower(concat('http://', reference(concat('Microsoft.Network/publicIPAddresses',concat( variables('publicIpAddressName'), '0' ))).dnsSettings.fqdn,':7070/pulse' ) )]"
     },
     "pulseLogin" : {
       "type":"string",
@@ -532,11 +532,11 @@
     },
     "locator1" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '0-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com','[10334]' ) )]"
+      "value": "[toLower(concat(reference(concat('Microsoft.Network/publicIPAddresses',concat( variables('publicIpAddressName'), '0' ))).dnsSettings.fqdn,'[10334]' ) )]"
     },
     "locator2" : {
       "type":"string",
-      "value": "[toLower(concat(variables('gfNodeName'), '1-', variables('subname'),'.',parameters('location'),'.cloudapp.azure.com','[10334]' ) )]"
+      "value": "[toLower(concat(reference(concat('Microsoft.Network/publicIPAddresses',concat( variables('publicIpAddressName'), '1' ))).dnsSettings.fqdn,'[10334]' ) )]"
     }
   }
 }
