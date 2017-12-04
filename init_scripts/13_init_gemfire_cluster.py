@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # check to see if we are the 0th host
     hostname = subprocess.check_output(['hostname']).strip()
-    if hostname == clusterName + '-server0':
+    if hostname == clusterName + '0':
         cluster_home = '/datadisks/disk1/gemfire_cluster'
         java_home = '/usr/java/jdk1.8.0_144'
         gemfire = '/usr/local/gemfire'
