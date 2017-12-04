@@ -294,7 +294,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ concat(uniqueString(resourceGroup().id), copyIndex() )]"
+          "domainNameLabel": "[ concat('server-',uniqueString(resourceGroup().id), copyIndex() )]"
         }
       }
     },

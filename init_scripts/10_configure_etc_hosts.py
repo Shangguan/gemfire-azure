@@ -8,7 +8,7 @@ def validate_env():
             sys.exit('A required environment variable is not present: ' + key)
 
 def public_name(clustername, region, index):
-    return '{0}.{1}.cloudapp.azure.com'.format(hostname(clustername, index), region).lower()
+    return 'server-{0}.{1}.cloudapp.azure.com'.format(hostname(clustername, index), region).lower()
 
 def hostname(clustername, index):
     return '{0}{1}'.format(clustername, index)

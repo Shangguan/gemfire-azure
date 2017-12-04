@@ -61,7 +61,6 @@ def detect_git_branch():
 def parseArgs():
     parser = argparse.ArgumentParser(description = 'This script deploys a GemFire cluster on Azure')
     allgroup = parser.add_argument_group('arguments')
-    allgroup.add_argument('--cluster-name', required=True, help='A unique name for the cluster.')
     allgroup.add_argument('--use-resource-group', help='The name of an existing resource group in which to deploy the GemFire cluster.')
     allgroup.add_argument('--admin-username', required=True, help='The username for SSH access to the deployed virtual machines')
     allgroup.add_argument('--admin-password', required=False, help='SSH password.  If provided, password login for <admin-username> will be enabled on all machined. Cannot be combined with the --public-ssh-key-file argument.')
@@ -184,8 +183,7 @@ if __name__ == '__main__':
 
     # compose the az command  sshPublicKey
 
-    overrides = ['--parameters', 'clusterName={0}'.format(args.cluster_name)]
-    overrides.append('adminUserName={0}'.format(args.admin_username))
+    overrides = ['--parameters', 'adminUserName={0}'.format(args.admin_username)]
     overrides.append('authenticationType={0}'.format(authentication_type))
     overrides.append('adminPassword={0}'.format(args.admin_password))
     overrides.append('sshPublicKey={0}'.format(sshkey))
@@ -196,5 +194,7 @@ if __name__ == '__main__':
     overrides.append('datanodeVmType={0}'.format(args.vmtype))
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
+
+    #debug azrun_list(['group', 'deployment', 'create','--debug', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json')] + overrides)
     azrun_list(['group', 'deployment', 'create', '--resource-group', resourcegroup, '--template-file', os.path.join(here, 'mainTemplate.json')] + overrides)
     print('GemFire cluster deployed.')
