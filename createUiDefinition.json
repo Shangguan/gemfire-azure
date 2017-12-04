@@ -5,17 +5,6 @@
   "parameters": {
     "basics": [
       {
-        "name": "clusterName",
-        "type": "Microsoft.Common.TextBox",
-        "label": "Cluster name (3-12 letters or numbers)",
-        "toolTip": "Cluster name will be used as prefix for most resources created for this cluster and must be unique within your account.",
-        "constraints": {
-          "required": true,
-          "regex": "^[a-z0-9]{3,12}$",
-          "validationMessage": "Cluster name between 3 and 10 characters long and can contain only numbers and lowercase letters"
-        }
-      },
-      {
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "Admin Username",

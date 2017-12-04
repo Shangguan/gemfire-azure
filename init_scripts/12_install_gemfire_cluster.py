@@ -18,9 +18,16 @@ def total_mem_megs():
 
 
 def validate_env():
-    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME']:
+    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME',  'CLUSTER_NAME']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
+
+def public_name(clustername, region, index):
+    return '{0}.{1}.cloudapp.azure.com'.format(hostname(clustername, index), region).lower()
+
+def hostname(clustername, index):
+    return '{0}{1}'.format(clustername, index)
+
 
 def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
     # set up context
@@ -34,9 +41,8 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
 
     for n in range(0,locators + dataNodes):
         server = dict()
-        server['Hostname'] = clusterName + '-server' + str(n)
-        sn = clusterName + '-server' + str(n) + '-' + az_subscription + '.'  + region + '.cloudapp.azure.com'
-        server['PublicName'] = sn.lower()
+        server['Hostname'] = clusterName + str(n)
+        server['PublicName'] = public_name(clusterName,region,n)
         server['PrivateIP'] = ipPrefix + str(startingIp + n)
         server['XMX'] = xmx
         server['XMN'] = xmn
@@ -77,7 +83,6 @@ if __name__ == '__main__':
     DATANODE_COUNT the  number of data nodes in this cluster
     REGION_NAME the Azure region where this cluster is deployed
     CLUSTER_NAME the name of the cluster
-    AZ_SUBSCRIPTION the name of the user owning this account
     """
     validate_env()
 
@@ -91,7 +96,6 @@ if __name__ == '__main__':
     region = os.environ['REGION_NAME']
     runAsUser = os.environ['GEMFIRE_USER']
     vmSize = total_mem_megs()
-    az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
 
     # used for security

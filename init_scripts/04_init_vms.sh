@@ -3,7 +3,6 @@
 # This script expects the following environment variables
 #
 # GEMFIRE_USER  the user that will run the GemFire processes
-# REGION_NAME   the azure region where this cluster is running (becomes part of the host name)
 # GEMFIRE_VERSION either 8 or 9
 
 # echo "applying sudo rules........"

@@ -37,12 +37,6 @@
           "description": "The Azure VM Type to use for all Vms in this cluster"
         }
     },
-    "clusterName": {
-      "type": "string",
-      "metadata": {
-        "description": "Cluster name will be used as prefix for most resources created for this cluster and must be unique within your account"
-      }
-    },
     "adminUserName": {
       "type": "string",
       "metadata": {
@@ -135,11 +129,11 @@
     "gemfireLocatorCount" : 2,
     "dataDiskCount" : 1,
     "dataDiskSizeGB" : 512,
-    "gfNodeName": "[concat(parameters('clusterName'), '-server') ]",
-    "gfstorageAccountName": "[concat(parameters('clusterName'), 'stgact')]",
+    "clusterName" : "[uniqueString(resourceGroup().id)]",
+    "gfstorageAccountName": "[concat(uniqueString(resourceGroup().id), 'stgact')]",
     "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')) ]",
     "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', variables('subnetName')) ]",
-    "gfSecurityGroupName": "[concat(parameters('clusterName'),'-nsg')]",
+    "gfSecurityGroupName": "[concat(uniqueString(resourceGroup().id),'-nsg')]",
     "s1": "[split(variables('subnetStartAddress'),'.')]",
     "linuxConfiguration_sshPublicKey": {
             "disablePasswordAuthentication": "true",
@@ -153,8 +147,7 @@
             }
           },
     "linuxConfiguration_password": {},
-    "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]",
-    "subname" : "[replace(subscription().displayName, ' ','')]"
+    "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]"
   },
   "resources": [
     {
@@ -301,7 +294,7 @@
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[ toLower(concat(variables('gfNodeName'), copyIndex(),'-', variables('subname') ) )]"
+          "domainNameLabel": "[ concat(uniqueString(resourceGroup().id), copyIndex() )]"
         }
       }
     },
@@ -343,7 +336,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword')]",
+      "name": "[concat(variables('clusterName'), copyIndex(), '-withpassword')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -360,7 +353,7 @@
           "vmSize": "[variables('datanodeVmSize') ]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('gfNodeName'), copyIndex())]",
+          "computerName": "[concat(variables('clusterName'), copyIndex())]",
           "adminUsername": "[parameters('adminUserName')]",
 		      "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
@@ -373,7 +366,7 @@
 		            "version": "latest"
 		          },
 		          "osDisk": {
-		            "name": "[concat(variables('gfNodeName'), copyIndex(), '-osdisk')]",
+		            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
 		            "caching": "ReadWrite",
 		            "createOption": "FromImage",
 		            "managedDisk": {
@@ -388,7 +381,7 @@
 		                "caching": "None",
 		                "diskSizeGB": "[variables('dataDiskSizeGB')]",
 		                "lun": "[copyIndex('dataDisks')]",
-		                "name": "[concat(variables('gfNodeName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+		                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
 		                "managedDisk": {
 		                  "storageAccountType": "[variables('storageAccountType')]"
 		                },
@@ -408,7 +401,7 @@
 		    },
         {
           "type": "Microsoft.Compute/virtualMachines",
-          "name": "[concat(variables('gfNodeName'), copyIndex(),'-withsshkey')]",
+          "name": "[concat(variables('clusterName'), copyIndex(),'-withsshkey')]",
           "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
           "location": "[parameters('location')]",
           "dependsOn": [
@@ -425,7 +418,7 @@
               "vmSize": "[variables('datanodeVmSize') ]"
             },
             "osProfile": {
-              "computerName": "[concat(variables('gfNodeName'), copyIndex())]",
+              "computerName": "[concat(variables('clusterName'), copyIndex())]",
               "adminUsername": "[parameters('adminUserName')]",
               "linuxConfiguration": "[variables('linuxConfiguration')]"
     	  	},
@@ -437,7 +430,7 @@
     		            "version": "latest"
     		          },
     		          "osDisk": {
-    		            "name": "[concat(variables('gfNodeName'), copyIndex(), '-osdisk')]",
+    		            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
     		            "caching": "ReadWrite",
     		            "createOption": "FromImage",
     		            "managedDisk": {
@@ -452,7 +445,7 @@
     		                "caching": "None",
     		                "diskSizeGB": "[variables('dataDiskSizeGB')]",
     		                "lun": "[copyIndex('dataDisks')]",
-    		                "name": "[concat(variables('gfNodeName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+    		                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
     		                "managedDisk": {
     		                  "storageAccountType": "[variables('storageAccountType')]"
     		                },
@@ -472,7 +465,7 @@
     		    },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withsshkey','/initGemfireVMs')]",
+      "name": "[concat(variables('clusterName'), copyIndex(), '-withsshkey','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
       "location": "[parameters('location')]",
@@ -481,7 +474,7 @@
         "count": "[variables('gemfireHostCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex(),'-withsshkey')]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('clusterName'), copyIndex(),'-withsshkey')]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -491,13 +484,13 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', variables('subname'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('gfNodeName'), copyIndex(), '-withpassword','/initGemfireVMs')]",
+      "name": "[concat(variables('clusterName'), copyIndex(), '-withpassword','/initGemfireVMs')]",
       "apiVersion": "[variables('apiVersions').compute.virtualMachineExtensions]",
       "condition": "[equals(parameters('authenticationType'),'password')]",
       "location": "[parameters('location')]",
@@ -506,7 +499,7 @@
         "count": "[variables('gemfireHostCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('gfNodeName'), copyIndex(),'-withpassword')]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('clusterName'), copyIndex(),'-withpassword')]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -516,7 +509,7 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' AZ_SUBSCRIPTION=', variables('subname'),' CLUSTER_NAME=', parameters('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     }

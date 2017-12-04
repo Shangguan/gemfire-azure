@@ -3,15 +3,15 @@ import os
 import sys
 
 def validate_env():
-    for key in ['LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'AZ_SUBSCRIPTION', 'CLUSTER_NAME', 'STARTING_PRIVATE_IP','PRIVATE_IP_PREFIX']:
+    for key in ['LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME', 'CLUSTER_NAME', 'STARTING_PRIVATE_IP','PRIVATE_IP_PREFIX']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
-def public_name(clustername, subscription, region, index):
-    return '{0}-{1}.{2}.cloudapp.azure.com'.format(hostname(clustername, index),subscription, region).lower()
+def public_name(clustername, region, index):
+    return '{0}.{1}.cloudapp.azure.com'.format(hostname(clustername, index), region).lower()
 
 def hostname(clustername, index):
-    return '{0}-server{1}'.format(clustername, index)
+    return '{0}{1}'.format(clustername, index)
 
 if __name__ == '__main__':
     """
@@ -20,7 +20,6 @@ if __name__ == '__main__':
     DATANODE_COUNT the  number of data nodes in this cluster
     REGION_NAME the Azure region where this cluster is deployed
     CLUSTER_NAME the name of the cluster
-    AZ_SUBSCRIPTION the name of the user owning this account
     STARTING_PRIVATE_IP
     PRIVATE_IP_PREFIX
     """
@@ -30,7 +29,6 @@ if __name__ == '__main__':
     locators = int(os.environ['LOCATOR_COUNT'])
     dataNodes = int(os.environ['DATANODE_COUNT'])
     region = os.environ['REGION_NAME']
-    az_subscription = os.environ['AZ_SUBSCRIPTION']
     clusterName = os.environ['CLUSTER_NAME']
     start_ip = int(os.environ['STARTING_PRIVATE_IP'])
     private_ip_prefix = os.environ['PRIVATE_IP_PREFIX']
