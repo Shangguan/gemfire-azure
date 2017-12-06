@@ -2,7 +2,7 @@
 ## Pivotal GemFire On Microsoft Azure.
 
 ##### Automated provisioning of Pivotal GemFire clusters on the Microsoft Azure cloud
-Currently supports GemFire version 9.1.0 and 8.2.6.
+Currently supports GemFire version 9.1.0 
 
 ## Overview
 The file _mainTemplate.json_ can be deployed using the Azure portal directly.
