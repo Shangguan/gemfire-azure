@@ -5,9 +5,7 @@
 Currently supports GemFire version 9.1.0 and 8.2.6.
 
 ## Overview
-The file _gemfire\_template.json_ can be deployed using the Azure portal. A
-unique cluster name, the number of data nodes and the public portion of an
-ssh key must be provided.  Several other parameters are optional.
+The file _mainTemplate.json_ can be deployed using the Azure portal directly.
 
 This project also provides a command line deployment script, _deploy.py_. See
 below for details.
@@ -25,24 +23,17 @@ The example below shows deploying a cluster into a newly created resource group 
 passwordless authentication enabled on the deployed servers.
 
 ```
-python ./deploy.py --create-resource-group MyTestGroup --location eastus2  --public-ssh-key-file ./azuredev.pub   --datanode-count 2 --cluster-name gemdev1
+python deploy.py   --create-resource-group=test --resource-group-location=eastus2 --resource-location=eastus2 --admin-username=gfadmin --public-ssh-key-file=azuredev.pub --datanode-count=3
 ```
 
 This example shows deploying a cluster into an existing resource group with
 password authentication enabled on the deployed servers.
 
 ```
-python ./deploy.py --use-resource-group MyTestGroup --admin-password opensesame  --datanode-count 2 --cluster-name gemdev1
+python deploy.py   --use-resource-group=test --resource-location=eastus2 --admin-username=gfadmin --public-ssh-key-file=azuredev.pub --datanode-count=3
 ```
 
-After the cluster is deployed and started, determine the public name of the
-first server.  In the example above, the server name would be
-__gemdev1-server0-my-account.eastus.cloudapp.azure.com__.  Your connection
-information will be as follows:
-
-
-gfsh: `connect --locator=gemdev1-server0-my-account.eastus.cloudapp.azure.com[10000]`
-pulse url: gemdev1-server0-my-account.eastus.cloudapp.azure.com:17070/pulse (admin/admin)
+The template returns the information you need to connect to your cluster.
 
 ## Setup for Script Based Deployment
 Install the [Azure CLI version 2.0](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).  
@@ -50,12 +41,6 @@ Ensure that the `az` command is on the path.
 
 Make sure you have authenticated with the CLI: `az login`
 
-## Known Issues
-
-1. Two clusters cannot be deployed into the same resource group.
-
-## Troubleshooting
-1. Be sure the cluster-name is unique across the entire account.
 
 ## Developer Notes
 A 3 node Vagrant development environment has been included for testing the
