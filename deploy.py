@@ -70,6 +70,7 @@ def parseArgs():
     allgroup.add_argument('--resource-location', required=True,  help='The Azure location where the new resources will be created.  This is separate from the location of the resource group.', choices = azureregions)
     allgroup.add_argument('--datanode-count', type=int, required = True, choices=range(2,16), help='Number of data nodes that will be deployed.')
     allgroup.add_argument('--vmtype', required = False, default="Standard_DS3_v2", choices=vmtypes, help='Azure VM Type')
+    allgroup.add_argument('--gemfire-superuser-password', required = True, help='The password for the gemfire superuser')
 
     try:
         args = parser.parse_args()
@@ -192,6 +193,7 @@ if __name__ == '__main__':
     overrides.append('artifactsBaseUrl={0}'.format(artifactsBaseUrl))
     overrides.append('location={0}'.format(args.resource_location))
     overrides.append('datanodeVmType={0}'.format(args.vmtype))
+    overrides.append('gemfireSuperUserPassword={0}'.format(args.gemfire_superuser_password))
 
     print('Deployment has begun.  This may take a while. Use the Azure portal to view progress...')
 

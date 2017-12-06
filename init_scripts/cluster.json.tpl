@@ -4,12 +4,19 @@
         "java-home" : "/usr/java/jdk1.8.0_144",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10334]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/datadisks/disk1/gemfire_cluster",
+        "classpath" : "{{ GemFireClassPath }}",
+        "security-manager" : "io.pivotal.pde.gemfire.dynamic.security.DynamicSecurityManager",
+        "security-peer-password" : "{{ GFPeerPassword }}",
+        "security-admin-password" : "{{ GFAdminPassword }}",
+        "security-disk-store-dir" : "/datadisks/disk1/gemfire_cluster/data/security",
         "distributed-system-id": 1
     },
    "locator-properties" : {
-        "port" : 10334,
-        "jmx-manager-port" : 1099,
-        "http-service-port" : 7070,
+        "security-username": "gfpeer",
+        "security-password" : "{{ GFPeerPassword }}",
+        "port" : 10000,
+        "jmx-manager-port" : 11099,
+        "http-service-port" : 17070,
         "jmx-manager" : "true",
         "log-level" : "config",
         "statistic-sampling-enabled" : "true",
@@ -22,6 +29,8 @@
         "jvm-options" : ["-Xmx2g","-Xms2g", "-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC" ]
     },
    "datanode-properties" : {
+       "user": "gfpeer",
+       "password" : "{{ GFPeerPassword }}",
         "conserve-sockets" : false,
         "log-level" : "config",
         "membership-port-range" : "10901-10999",

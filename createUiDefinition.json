@@ -40,11 +40,47 @@
 	          "osPlatform": "Linux"
 	        },
           {
+            "name": "allowedInboundIPAddressCIDR",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Inbound Connection Restriction",
+            "toolTip": "Optionally restrict inbound connections to a source ip address range specified with a CIDR block",
+            "defaultValue": "0.0.0.0/0",
+            "constraints": {
+              "required": true,
+              "regex": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
+              "validationMessage": "Please provide a valid CIDR block"
+            }
+          }
+    ],
+    "steps" : [
+      {
+        "name": "clustersize",
+        "label" : "Sizing",
+        "subLabel": {
+          "preValidation": "Specify Type and Number of Data Nodes",
+          "postValidation": "Done"
+        },
+        "bladeTitle" : "Sizing",
+        "elements" : [
+          {
+            "name": "vmSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Virtual Machine Type",
+            "toolTip": "Premium storage enabled types with at least 4 cores are recommended.",
+            "recommendedSizes": [
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2"
+            ],
+            "osPlatform": "Linux",
+            "count": "1"
+          },
+          {
             "name": "gemfireDatanodeCount",
             "type": "Microsoft.Common.DropDown",
             "label": "Number of Data Nodes",
             "defaultValue": "2",
-            "toolTip": "Each data node will have 17G storage capacity and you should have at least 2 for fault tolerance",
+            "toolTip": "Roughly 65% of the memory on a node will be available for object storage and you should have at least 2 for fault tolerance",
             "constraints": {
               "allowedValues": [
                 {
@@ -85,42 +121,35 @@
                 }
               ]
             }
-          },
-          {
-            "name": "allowedInboundIPAddressCIDR",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Inbound Connection Restriction",
-            "toolTip": "Optionally restrict inbound connections to a source ip address range specified with a CIDR block",
-            "defaultValue": "0.0.0.0/0",
-            "constraints": {
-              "required": true,
-              "regex": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$",
-              "validationMessage": "Please provide a valid CIDR block"
-            }
           }
-    ],
-    "steps" : [
+        ]
+      },
       {
-        "name": "clustersize",
-        "label" : "Sizing",
+        "name": "security",
+        "label" : "GemFire Security Settings",
         "subLabel": {
-          "preValidation": "Specify Type and Number of Data Nodes",
+          "preValidation": "Specify the superuser password",
           "postValidation": "Done"
         },
-        "bladeTitle" : "Sizing",
+        "bladeTitle" : "GemFire Security",
         "elements" : [
           {
-            "name": "vmSize",
-            "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual Machine Type",
-            "toolTip": "Premium storage enabled types with at least 4 cores are recommended.",
-            "recommendedSizes": [
-                "Standard_DS3_v2",
-                "Standard_DS4_v2",
-                "Standard_DS5_v2"
-            ],
-            "osPlatform": "Linux",
-            "count": "1"
+            "name": "superuserpass",
+            "type": "Microsoft.Common.PasswordBox",
+            "label": {
+              "password": "GemFire superuser password",
+              "confirmPassword": "confirm GemFire superuser password"
+            },
+            "toolTip": "The superuser will have all privileges",
+            "constraints": {
+              "required": true,
+              "regex": "",
+              "validationMessage": ""
+            },
+            "options": {
+              "hideConfirmation": false
+            },
+            "visible": true
           }
         ]
       }
@@ -132,7 +161,8 @@
 	    "adminPassword": "[basics('adminCredentials').password]",
 	    "sshPublicKey": "[basics('adminCredentials').sshPublicKey]",
 	    "authenticationType": "[basics('adminCredentials').authenticationType]",
-      "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
+      "gemfireDatanodeCount": "[steps('clustersize').gemfireDatanodeCount]",
+      "gemfireSuperUserPassword" : "[steps('security').superuserpass]",
       "datanodeVmType" : "[steps('clustersize').vmSize]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
       "gemfireOnAzureProjectTag" : "1.0.0"

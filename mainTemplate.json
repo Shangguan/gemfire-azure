@@ -91,7 +91,14 @@
       "metadata": {
         "description": "The number of datanodesto provision in the GemFire cluster"
       }
-    }
+    },
+    "gemfireSuperUserPassword": {
+      "type": "securestring",
+      "defaultValue": "",
+       "metadata": {
+         "description": "Password for administrator access to GemFire cluster"
+       }
+     }
   },
   "variables": {
     "apiVersions": {
@@ -484,7 +491,7 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'),' GF_SUPERUSER_PASS=', parameters('gemfireSuperUserPassword'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
         }
       }
     },
@@ -509,8 +516,7 @@
           "fileUris": [
             "[concat(parameters('artifactsBaseUrl'),'/bootstrap.py')]"
           ],
-          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"
-        }
+          "commandToExecute": "[concat('python bootstrap.py --git-branch ',parameters('gemfireOnAzureProjectTag'), ' --environment GEMFIRE_USER=', parameters('adminUserName'),' GF_SUPERUSER_PASS=', parameters('gemfireSuperUserPassword'), ' REGION_NAME=', parameters('location'), ' LOCATOR_COUNT=', variables('gemfireLocatorCount'), ' DATANODE_COUNT=', variables('gemfireDatanodeCount'), ' CLUSTER_NAME=', variables('clusterName'), ' STARTING_PRIVATE_IP=',variables('s1')[3], ' PRIVATE_IP_PREFIX=', variables('s1')[0],'.',variables('s1')[1],'.',variables('s1')[2],'.')]"        }
       }
     }
   ],
