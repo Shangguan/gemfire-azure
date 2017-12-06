@@ -37,7 +37,7 @@ def gen_clusterdef(cluster_home_dir, run_as_user, uid, gid):
 
 	context['GFPeerPassword'] = gf_superuser_pass
 	context['GFAdminPassword'] = gf_superuser_pass
-	context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.4-SNAPSHOT.jar'.format(runAsUser)
+	context['GemFireClassPath'] = '/home/{0}/gemfire-azure/gemfire-dynamic-security/target/gemfire-dynamic-security-1.0.4.jar'.format(runAsUser)
 
     for n in range(0,locators + dataNodes):
         server = dict()
