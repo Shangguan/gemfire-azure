@@ -14,9 +14,9 @@
    "locator-properties" : {
         "security-username": "gfpeer",
         "security-password" : "{{ GFPeerPassword }}",
-        "port" : 10000,
-        "jmx-manager-port" : 11099,
-        "http-service-port" : 17070,
+        "port" : 10334,
+        "jmx-manager-port" : 1099,
+        "http-service-port" : 7070,
         "jmx-manager" : "true",
         "log-level" : "config",
         "statistic-sampling-enabled" : "true",
