@@ -348,6 +348,11 @@
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
       },
+      "plan": {
+        "name": "gpdb-segment",
+        "publisher": "pivotal",
+        "product": "pivotal-gpdb-vm"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('datanodeVmSize') ]"
@@ -358,13 +363,13 @@
 		      "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
 	  	},
-		"storageProfile": {
-		          "imageReference": {
-		            "publisher": "OpenLogic",
-		            "offer": "CentOS",
-		            "sku": "7.3",
-		            "version": "latest"
-		          },
+        "storageProfile": {
+            "imageReference": {
+              "publisher": "pivotal",
+              "offer": "pivotal-gpdb-vm",
+              "sku": "gpdb-segment",
+              "version": "latest"
+            },
 		          "osDisk": {
 		            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
 		            "caching": "ReadWrite",
