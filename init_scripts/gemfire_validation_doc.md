@@ -1,11 +1,11 @@
 ******************************************************************************************************
-Use the following steps to validate your Azure Gemfire deployment.  This is also a good way to get
+Use the following steps to validate your Azure GemFire deployment.  This is also a good way to get
 familiar with some of the gfsh cli commands.  Sample output is included.
 
 To learn more about GemFire and the cli (gfsh), please reference the following url:
    http://gemfire.docs.pivotal.io/gemfire/about_gemfire.html
 ******************************************************************************************************
-START: Validate Gemfire 
+START: Validate GemFire 
    NOTE1: Find your DNS names and IP addresses by looking at /etc/hosts (cat /etc/hosts)
    NOTE2: Replace the DNS names in the following examples with your actual DNS names
    NOTE3: The last section discusses the Web Interface Pulse, and shows how to launch it and login
@@ -27,27 +27,27 @@ STEP 2 - Start gfsh by running gfsh at the command prompt
 
 Monitor and Manage Pivotal GemFire
 ******************************************************************************************************
-STEP 3 - Connect to a Gemfire locator
+STEP 3 - Connect to a GemFire locator
    gfsh>connect --locator=rmpgf9-server0.eastus.cloudapp.azure.com[10334]
    
    Connecting to Locator at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=10334]
    Connecting to Manager at [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=1099]
    Successfully connected to: [host=rmpgf9-server0.eastus.cloudapp.azure.com, port=1099]
 ******************************************************************************************************
-STEP 4 - List Gemfire Members
+STEP 4 - List GemFire Members
    Cluster-1 gfsh>list members
             Name           | Id
    ----------------------- | ----------------------------------------------------------
    rmpgf9-server0-locator  | 10.0.1.4(rmpgf9-server0-locator:2225:locator)<ec><v0>:1024
    rmpgf9-server1-datanode | 10.0.1.5(rmpgf9-server1-datanode:2322)<v3>:10901
 ******************************************************************************************************
-STEP 5 - Create a Gemfire region
+STEP 5 - Create a GemFire region
    gfsh>create region --name=accounts --type=REPLICATE
    Member  | Status
    ------- | ---------------------------------------
    server1 | Region "/accounts" created on "server1"
 ******************************************************************************************************
-STEP 6 - List Gemfire regions
+STEP 6 - List GemFire regions
    gfsh>list regions
    List of regions
    ---------------
@@ -68,7 +68,7 @@ STEP 7 - Use the put command to add an entry in the region
    Value Class : java.lang.String
    Old Value   : <NULL>
 ******************************************************************************************************
-STEP 8 - Describe Gemfire regions
+STEP 8 - Describe GemFire regions
    Cluster-1 gfsh>describe region --name=accounts
    ..........................................................
    Name            : accounts
@@ -83,7 +83,7 @@ STEP 8 - Describe Gemfire regions
           | size        | 2
           | scope       | distributed-ack
 ******************************************************************************************************
-STEP 9 - Show Gemfire metrics
+STEP 9 - Show GemFire metrics
    Cluster-1 gfsh>show metrics
    
    Cluster-wide Metrics  
@@ -103,14 +103,14 @@ STEP 9 - Show Gemfire metrics
    query     | activeCQCount         | 0
              | queryRequestRate      | 0
 ******************************************************************************************************
-STEP 10 - List Gemfire members
+STEP 10 - List GemFire members
    Cluster-1 gfsh>list members
             Name           | Id
    ----------------------- | ----------------------------------------------------------
    rmpgf9-server0-locator  | 10.0.1.4(rmpgf9-server0-locator:2225:locator)<ec><v0>:1024
    rmpgf9-server1-datanode | 10.0.1.5(rmpgf9-server1-datanode:2322)<v3>:10901
 ******************************************************************************************************
-GEMFIRE PULSE
+GemFire PULSE
    GemFire Pulse is a Web Application that provides a graphical dashboard for monitoring vital, 
    real-time health and performance of GemFire clusters, members, and regions.  To learn more about 
    Pulse, please reference the following url:
