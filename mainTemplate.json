@@ -348,6 +348,11 @@
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
       },
+      "plan": {
+        "name": "gpdb-segment",
+        "publisher": "pivotal",
+        "product": "pivotal-gpdb-vm"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('datanodeVmSize') ]"
@@ -357,11 +362,6 @@
           "adminUsername": "[parameters('adminUserName')]",
           "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
-        },
-        "plan": {
-          "name": "gpdb-segment",
-          "publisher": "pivotal",
-          "product": "pivotal-gpdb-vm"
         },
         "storageProfile": {
           "imageReference": {
@@ -418,6 +418,11 @@
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
       },
+      "plan": {
+        "name": "gpdb-segment",
+        "publisher": "pivotal",
+        "product": "pivotal-gpdb-vm"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('datanodeVmSize') ]"
@@ -426,11 +431,6 @@
           "computerName": "[concat(variables('clusterName'), copyIndex())]",
           "adminUsername": "[parameters('adminUserName')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
-        },
-        "plan": {
-          "name": "gpdb-segment",
-          "publisher": "pivotal",
-          "product": "pivotal-gpdb-vm"
         },
         "storageProfile": {
           "imageReference": {
