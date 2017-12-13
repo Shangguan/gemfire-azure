@@ -11,31 +11,31 @@
         "description": "Provider tags"
       }
     },
-    "location" : {
-        "type" : "string",
-        "metadata": {
-          "description": "The location where resources will be deployed (may be different from resource group location)"
-        }
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location where resources will be deployed (may be different from resource group location)"
+      }
     },
-    "artifactsBaseUrl" : {
-      "type" : "string",
+    "artifactsBaseUrl": {
+      "type": "string",
       "metadata": {
         "description": "Location from which bootstrap will be downloaded",
-        "artifactsBaseUrl" : ""
+        "artifactsBaseUrl": ""
       }
     },
     "gemfireOnAzureProjectTag": {
       "type": "string",
-      "defaultValue" : "1.0.0",
+      "defaultValue": "1.0.0",
       "metadata": {
         "description": "The version of the GemFire on Azure project to use for this deployments."
       }
     },
-    "datanodeVmType" : {
-        "type" : "string",
-        "metadata": {
-          "description": "The Azure VM Type to use for all Vms in this cluster"
-        }
+    "datanodeVmType": {
+      "type": "string",
+      "metadata": {
+        "description": "The Azure VM Type to use for all Vms in this cluster"
+      }
     },
     "adminUserName": {
       "type": "string",
@@ -63,7 +63,7 @@
     },
     "sshPublicKey": {
       "type": "securestring",
-	  "defaultValue": "",
+      "defaultValue": "",
       "metadata": {
         "description": "Public key for passwordless SSH access to the virtual machines"
       }
@@ -109,43 +109,43 @@
         "networkSecurityGroups": "2016-09-01"
       },
       "compute": {
-        "availabilitySets": "2016-04-30-preview",
-        "virtualMachines": "2016-04-30-preview",
-        "virtualMachineExtensions": "2016-04-30-preview",
-        "disks": "2016-04-30-preview"
+        "availabilitySets": "2017-03-30",
+        "virtualMachines": "2017-12-01",
+        "virtualMachineExtensions": "2017-12-01",
+        "disks": "2017-12-01"
       }
     },
-    "storageAccountType" : "Premium_LRS",
-    "networkInterfaceName" : "gemfiredatafabric-nic",
-    "virtualNetworkName" : "gemfiredatafabric-vnet",
-    "virtualNetworkAddressSpace" : "10.0.0.0/16",
-    "subnetAddressSpace" : "10.0.1.0/24",
-    "subnetStartAddress" : "10.0.1.4",
-    "subnetName" : "gemfiredatafabric-subnet",
-    "publicIpAddressName" : "gemfiredatafabric-publicip",
+    "storageAccountType": "Premium_LRS",
+    "networkInterfaceName": "gemfiredatafabric-nic",
+    "virtualNetworkName": "gemfiredatafabric-vnet",
+    "virtualNetworkAddressSpace": "10.0.0.0/16",
+    "subnetAddressSpace": "10.0.1.0/24",
+    "subnetStartAddress": "10.0.1.4",
+    "subnetName": "gemfiredatafabric-subnet",
+    "publicIpAddressName": "gemfiredatafabric-publicip",
     "datanodeVmSize": "[ parameters('datanodeVmType') ]",
-    "gemfireHostCount" : "[ add(2, parameters('gemfireDatanodeCount')) ]",
-    "gemfireDatanodeCount" : "[ parameters('gemfireDatanodeCount') ]",
-    "gemfireLocatorCount" : 2,
-    "dataDiskCount" : 1,
-    "dataDiskSizeGB" : 512,
-    "clusterName" : "[uniqueString(resourceGroup().id)]",
+    "gemfireHostCount": "[ add(2, parameters('gemfireDatanodeCount')) ]",
+    "gemfireDatanodeCount": "[ parameters('gemfireDatanodeCount') ]",
+    "gemfireLocatorCount": 2,
+    "dataDiskCount": 1,
+    "dataDiskSizeGB": 512,
+    "clusterName": "[uniqueString(resourceGroup().id)]",
     "gfstorageAccountName": "[concat(uniqueString(resourceGroup().id), 'stgact')]",
     "gfvnetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')) ]",
     "gfsubnetRef": "[concat(variables('gfvnetRef'),'/subnets/', variables('subnetName')) ]",
     "gfSecurityGroupName": "[concat(uniqueString(resourceGroup().id),'-nsg')]",
     "s1": "[split(variables('subnetStartAddress'),'.')]",
     "linuxConfiguration_sshPublicKey": {
-            "disablePasswordAuthentication": "true",
-            "ssh": {
-              "publicKeys": [
-                {
-                  "path": "[concat('/home/', parameters('adminUserName'), '/.ssh/authorized_keys')]",
-                  "keyData": "[parameters('sshPublicKey')]"
-                }
-              ]
-            }
-          },
+      "disablePasswordAuthentication": "true",
+      "ssh": {
+        "publicKeys": [
+          {
+            "path": "[concat('/home/', parameters('adminUserName'), '/.ssh/authorized_keys')]",
+            "keyData": "[parameters('sshPublicKey')]"
+          }
+        ]
+      }
+    },
     "linuxConfiguration_password": {},
     "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]"
   },
@@ -348,10 +348,75 @@
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
       },
-      "plan": {
-        "name": "gpdb-segment",
-        "publisher": "pivotal",
-        "product": "pivotal-gpdb-vm"
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('datanodeVmSize') ]"
+        },
+        "osProfile": {
+          "computerName": "[concat(variables('clusterName'), copyIndex())]",
+          "adminUsername": "[parameters('adminUserName')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "linuxConfiguration": "[variables('linuxConfiguration')]"
+        },
+        "plan": {
+          "name": "gpdb-segment",
+          "publisher": "pivotal",
+          "product": "pivotal-gpdb-vm"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "pivotal",
+            "offer": "pivotal-gpdb-vm",
+            "sku": "gpdb-segment",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "[variables('storageAccountType')]"
+            }
+          },
+          "copy": [
+            {
+              "name": "dataDisks",
+              "count": "[variables('dataDiskCount')]",
+              "input": {
+                "caching": "None",
+                "diskSizeGB": "[variables('dataDiskSizeGB')]",
+                "lun": "[copyIndex('dataDisks')]",
+                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+                "managedDisk": {
+                  "storageAccountType": "[variables('storageAccountType')]"
+                },
+                "createOption": "Empty"
+              }
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'), copyIndex()))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(variables('clusterName'), copyIndex(),'-withsshkey')]",
+      "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'), copyIndex())]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
+      ],
+      "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
+      "copy": {
+        "name": "gfNodeNicLoop",
+        "count": "[variables('gemfireHostCount')]"
       },
       "properties": {
         "hardwareProfile": {
@@ -360,114 +425,54 @@
         "osProfile": {
           "computerName": "[concat(variables('clusterName'), copyIndex())]",
           "adminUsername": "[parameters('adminUserName')]",
-		      "adminPassword": "[parameters('adminPassword')]",
           "linuxConfiguration": "[variables('linuxConfiguration')]"
-	  	},
+        },
+        "plan": {
+          "name": "gpdb-segment",
+          "publisher": "pivotal",
+          "product": "pivotal-gpdb-vm"
+        },
         "storageProfile": {
-            "imageReference": {
-              "publisher": "pivotal",
-              "offer": "pivotal-gpdb-vm",
-              "sku": "gpdb-segment",
-              "version": "latest"
-            },
-		          "osDisk": {
-		            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
-		            "caching": "ReadWrite",
-		            "createOption": "FromImage",
-		            "managedDisk": {
-		              "storageAccountType": "[variables('storageAccountType')]"
-		            }
-		          },
-		          "copy": [
-		            {
-		              "name": "dataDisks",
-		              "count": "[variables('dataDiskCount')]",
-		              "input": {
-		                "caching": "None",
-		                "diskSizeGB": "[variables('dataDiskSizeGB')]",
-		                "lun": "[copyIndex('dataDisks')]",
-		                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
-		                "managedDisk": {
-		                  "storageAccountType": "[variables('storageAccountType')]"
-		                },
-		                "createOption": "Empty"
-		              }
-		            }
-		          ]
-		        },
-		        "networkProfile": {
-		          "networkInterfaces": [
-		            {
-		              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'), copyIndex()))]"
-		            }
-		          ]
-		        }
-		      }
-		    },
-        {
-          "type": "Microsoft.Compute/virtualMachines",
-          "name": "[concat(variables('clusterName'), copyIndex(),'-withsshkey')]",
-          "apiVersion": "[variables('apiVersions').compute.virtualMachines]",
-          "location": "[parameters('location')]",
-          "dependsOn": [
-            "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'), copyIndex())]",
-            "[concat('Microsoft.Storage/storageAccounts/', variables('gfstorageAccountName'), copyIndex())]"
-          ],
-          "condition": "[equals(parameters('authenticationType'),'sshPublicKey')]",
-          "copy": {
-            "name": "gfNodeNicLoop",
-            "count": "[variables('gemfireHostCount')]"
+          "imageReference": {
+            "publisher": "pivotal",
+            "offer": "pivotal-gpdb-vm",
+            "sku": "gpdb-segment",
+            "version": "latest"
           },
-          "properties": {
-            "hardwareProfile": {
-              "vmSize": "[variables('datanodeVmSize') ]"
-            },
-            "osProfile": {
-              "computerName": "[concat(variables('clusterName'), copyIndex())]",
-              "adminUsername": "[parameters('adminUserName')]",
-              "linuxConfiguration": "[variables('linuxConfiguration')]"
-    	  	},
-    		"storageProfile": {
-    		          "imageReference": {
-    		            "publisher": "OpenLogic",
-    		            "offer": "CentOS",
-    		            "sku": "7.3",
-    		            "version": "latest"
-    		          },
-    		          "osDisk": {
-    		            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
-    		            "caching": "ReadWrite",
-    		            "createOption": "FromImage",
-    		            "managedDisk": {
-    		              "storageAccountType": "[variables('storageAccountType')]"
-    		            }
-    		          },
-    		          "copy": [
-    		            {
-    		              "name": "dataDisks",
-    		              "count": "[variables('dataDiskCount')]",
-    		              "input": {
-    		                "caching": "None",
-    		                "diskSizeGB": "[variables('dataDiskSizeGB')]",
-    		                "lun": "[copyIndex('dataDisks')]",
-    		                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
-    		                "managedDisk": {
-    		                  "storageAccountType": "[variables('storageAccountType')]"
-    		                },
-    		                "createOption": "Empty"
-    		              }
-    		            }
-    		          ]
-    		        },
-    		        "networkProfile": {
-    		          "networkInterfaces": [
-    		            {
-    		              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'), copyIndex()))]"
-    		            }
-    		          ]
-    		        }
-    		      }
-    		    },
+          "osDisk": {
+            "name": "[concat(variables('clusterName'), copyIndex(), '-osdisk')]",
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "[variables('storageAccountType')]"
+            }
+          },
+          "copy": [
+            {
+              "name": "dataDisks",
+              "count": "[variables('dataDiskCount')]",
+              "input": {
+                "caching": "None",
+                "diskSizeGB": "[variables('dataDiskSizeGB')]",
+                "lun": "[copyIndex('dataDisks')]",
+                "name": "[concat(variables('clusterName'), copyIndex(), '-datadisk',copyIndex('dataDisks'))]",
+                "managedDisk": {
+                  "storageAccountType": "[variables('storageAccountType')]"
+                },
+                "createOption": "Empty"
+              }
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('networkInterfaceName'), copyIndex()))]"
+            }
+          ]
+        }
+      }
+    },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('clusterName'), copyIndex(), '-withsshkey','/initGemfireVMs')]",
@@ -520,20 +525,20 @@
     }
   ],
   "outputs": {
-    "pulseURL" : {
-      "type":"string",
+    "pulseURL": {
+      "type": "string",
       "value": "[toLower(concat('http://', reference(concat('Microsoft.Network/publicIPAddresses/',concat( variables('publicIpAddressName'), '0' ))).dnsSettings.fqdn,':7070/pulse' ) )]"
     },
-    "pulseLogin" : {
-      "type":"string",
+    "pulseLogin": {
+      "type": "string",
       "value": "admin/admin"
     },
-    "locator1" : {
-      "type":"string",
+    "locator1": {
+      "type": "string",
       "value": "[toLower(concat(reference(concat('Microsoft.Network/publicIPAddresses/',concat( variables('publicIpAddressName'), '0' ))).dnsSettings.fqdn,'[10334]' ) )]"
     },
-    "locator2" : {
-      "type":"string",
+    "locator2": {
+      "type": "string",
       "value": "[toLower(concat(reference(concat('Microsoft.Network/publicIPAddresses/',concat( variables('publicIpAddressName'), '1' ))).dnsSettings.fqdn,'[10334]' ) )]"
     }
   }
