@@ -1,6 +1,6 @@
 ******************************************************************************************************
-Use the following steps to validate your Azure Gemfire deployment.  This is also a good way to get
-familiar with some of the gfsh cli commands.  Sample output is included.
+Use the following steps to validate your Azure Gemfire deployment.  This is a good way to get
+familiar with some of the gfsh cli commands too.  Sample output is included.
 
 To learn more about GemFire and the cli (gfsh), please reference the following url:
    http://gemfire.docs.pivotal.io/gemfire/about_gemfire.html
