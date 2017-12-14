@@ -166,11 +166,6 @@
       "tags": {
         "provider": "[toUpper(parameters('pivotalTags').provider)]"
       },
-      "plan": {
-        "name": "gpdb-segment",
-        "publisher": "pivotal",
-        "product": "pivotal-gpdb-vm"
-      },
       "properties": {}
     },
     {
@@ -353,6 +348,11 @@
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
       },
+      "plan": {
+        "name": "gpdb-segment",
+        "publisher": "pivotal",
+        "product": "pivotal-gpdb-vm"
+      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('datanodeVmSize') ]"
@@ -417,6 +417,11 @@
       "copy": {
         "name": "gfNodeNicLoop",
         "count": "[variables('gemfireHostCount')]"
+      },
+      "plan": {
+        "name": "gpdb-segment",
+        "publisher": "pivotal",
+        "product": "pivotal-gpdb-vm"
       },
       "properties": {
         "hardwareProfile": {
