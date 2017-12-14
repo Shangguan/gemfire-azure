@@ -395,12 +395,6 @@
             }
           ]
         },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccount')), '2016-01-01').primaryEndpoints.blob]"
-          }
-        },
         "networkProfile": {
           "networkInterfaces": [
             {
@@ -469,12 +463,6 @@
               }
             }
           ]
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": true,
-            "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccount')), '2016-01-01').primaryEndpoints.blob]"
-          }
         },
         "networkProfile": {
           "networkInterfaces": [
