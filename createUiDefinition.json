@@ -135,7 +135,7 @@
       "gemfireDatanodeCount": "[basics('gemfireDatanodeCount')]",
       "datanodeVmType" : "[steps('clustersize').vmSize]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "1.0.0"
+      "gemfireOnAzureProjectTag" : "h1.0.0"
     }
   }
 }
