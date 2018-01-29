@@ -41,9 +41,7 @@ echo "install python jinja2 ..."
 pip install jinja2
 
 echo "installing jdk....."
-wget https://gemfirestgacct01.blob.core.windows.net/binaries/jdk-8u144-linux-x64.rpm
-yum localinstall -y jdk-8u144-linux-x64.rpm
-rm -f jdk-8u102-linux-x64.rpm
+sudo yum install java-1.8.0-openjdk-devel.i686
 
 echo "installing Gemfire software ........"
 wget http://download.pivotal.com.s3.amazonaws.com/gemfire/9.2.2/pivotal-gemfire-9.2.2.zip
@@ -52,7 +50,7 @@ mv pivotal-gemfire-9.2.2 /usr/local/
 ln -s /usr/local/pivotal-gemfire-9.2.2/ /usr/local/gemfire
 chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 
-echo export JAVA_HOME=/usr/java/jdk1.8.0_144 >> /home/$GEMFIRE_USER/.bashrc
+echo export JAVA_HOME=/etc/alternativs/java_sdk >> /home/$GEMFIRE_USER/.bashrc
 echo export GEMFIRE=/usr/local/gemfire >> /home/$GEMFIRE_USER/.bashrc
 echo export PATH='$JAVA_HOME/bin:$GEMFIRE/bin:/usr/local/maven/bin:$PATH' >> /home/$GEMFIRE_USER/.bashrc
 
