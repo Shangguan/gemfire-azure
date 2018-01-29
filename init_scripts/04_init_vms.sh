@@ -50,9 +50,11 @@ mv pivotal-gemfire-9.2.2 /usr/local/
 ln -s /usr/local/pivotal-gemfire-9.2.2/ /usr/local/gemfire
 chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 
-echo export JAVA_HOME=/etc/alternativs/java_sdk >> /home/$GEMFIRE_USER/.bashrc
+echo export JAVA_HOME=/etc/alternatives/java_sdk >> /home/$GEMFIRE_USER/.bashrc
 echo export GEMFIRE=/usr/local/gemfire >> /home/$GEMFIRE_USER/.bashrc
 echo export PATH='$JAVA_HOME/bin:$GEMFIRE/bin:/usr/local/maven/bin:$PATH' >> /home/$GEMFIRE_USER/.bashrc
+
+source  /home/$GEMFIRE_USER/.bashrc
 
 
 echo "Finished executing 04_init_vms.sh"
