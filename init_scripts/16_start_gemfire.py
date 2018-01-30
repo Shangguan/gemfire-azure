@@ -44,7 +44,7 @@ if __name__ == '__main__':
     private_ip_prefix = os.environ['PRIVATE_IP_PREFIX']
 
     cluster_home = '/datadisks/disk1/gemfire_cluster'
-    java_home = '/usr/java/jdk1.8.0_144'
+    java_home = '/etc/alternatives/java_sdk'
     gemfire = '/usr/local/gemfire'
 
     primary_ip = '{0}{1}'.format(private_ip_prefix,start_ip)

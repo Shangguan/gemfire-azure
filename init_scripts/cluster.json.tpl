@@ -1,7 +1,7 @@
 {
     "global-properties":{
         "gemfire": "/usr/local/gemfire",
-        "java-home" : "/usr/java/jdk1.8.0_144",
+        "java-home" : "/etc/alternatives/java_sdk",
         "locators" : "{% for Server in Servers  if "Locator" in Server.Roles -%}{{ Server.PublicName }}[10334]{% if not loop.last -%},{%- endif %}{%- endfor %}",
         "cluster-home" : "/datadisks/disk1/gemfire_cluster",
         "classpath" : "{{ GemFireClassPath }}",

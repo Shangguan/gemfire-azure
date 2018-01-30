@@ -33,7 +33,7 @@ if __name__ == '__main__':
     hostname = subprocess.check_output(['hostname']).strip()
     if hostname == clusterName + '0':
         cluster_home = '/datadisks/disk1/gemfire_cluster'
-        java_home = '/usr/java/jdk1.8.0_144'
+        java_home = '/etc/alternatives/java_sdk'
         gemfire = '/usr/local/gemfire'
 
         rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
