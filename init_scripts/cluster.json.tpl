@@ -29,7 +29,7 @@
         "jvm-options" : ["-Xmx2g","-Xms2g", "-XX:+UseConcMarkSweepGC", "-XX:+UseParNewGC" ]
     },
    "datanode-properties" : {
-s        "conserve-sockets" : false,
+        "conserve-sockets" : false,
         "log-level" : "config",
         "membership-port-range" : "10901-10999",
         "statistic-sampling-enabled" : "true",
