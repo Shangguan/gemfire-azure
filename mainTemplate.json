@@ -527,7 +527,7 @@
     },
     "pulseLogin" : {
       "type":"string",
-      "value": "admin/admin"
+      "value": "Use 'gfadmin' for the user name and the gemfire superuser password."
     },
     "locator1" : {
       "type":"string",

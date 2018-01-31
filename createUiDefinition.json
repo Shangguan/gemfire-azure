@@ -8,7 +8,7 @@
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "Admin Username",
-        "toolTip": "Username to use for SSH access to the virtual machines",
+        "toolTip": "Username for SSH access to the virtual machines",
         "defaultValue": "gfadmin",
         "constraints": {
           "required": true,
@@ -22,8 +22,8 @@
 	          "type": "Microsoft.Compute.CredentialsCombo",
 	          "label": {
 	            "authenticationType": "Authentication Type",
-	            "password": "Admin Password",
-	            "confirmPassword": "Confirm Admin Password",
+	            "password": "SSH Password",
+	            "confirmPassword": "Confirm SSH Password",
 	            "sshPublicKey": "SSH Public Key"
 	          },
 	          "toolTip": {
@@ -140,7 +140,7 @@
               "password": "GemFire superuser password",
               "confirmPassword": "confirm GemFire superuser password"
             },
-            "toolTip": "The superuser will have all privileges",
+            "toolTip": "The superuser will have all privileges on GemFire.",
             "constraints": {
               "required": true,
               "regex": "",
@@ -165,7 +165,7 @@
       "gemfireSuperUserPassword" : "[steps('security').superuserpass]",
       "datanodeVmType" : "[steps('clustersize').vmSize]",
       "allowedInboundIPAddressCIDR" : "[basics('allowedInboundIPAddressCIDR')]",
-      "gemfireOnAzureProjectTag" : "1.0.0"
+      "gemfireOnAzureProjectTag" : "2.0.0-working"
     }
   }
 }
