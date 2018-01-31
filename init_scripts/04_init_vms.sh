@@ -41,7 +41,7 @@ echo "install python jinja2 ..."
 pip install jinja2
 
 echo "installing jdk....."
-sudo yum install -y java-1.8.0-openjdk-devel.i686
+sudo yum install -y java-1.8.0-openjdk-devel
 
 echo "installing Gemfire software ........"
 wget http://download.pivotal.com.s3.amazonaws.com/gemfire/9.2.2/pivotal-gemfire-9.2.2.zip
