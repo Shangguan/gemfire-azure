@@ -22,6 +22,9 @@ if __name__ == '__main__':
     subprocess.check_output(['parted', device, 'mklabel', 'gpt', 'mkpart', 'primary', 'ext2', '0%', '100%'])
     print('partitioned {0}'.format(device))
 
+    # wait for /dev/sdc1 to be created
+    subprocess.call(['sleep','5'])
+
     subprocess.check_call(['mkfs','-t',fstype, device + '1'])
     print('formatted {0}'.format(device))
 
