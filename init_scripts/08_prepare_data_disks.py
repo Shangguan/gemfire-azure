@@ -29,7 +29,7 @@ if __name__ == '__main__':
     subprocess.check_call(['mount','-t',fstype,device + '1',mount_point])
     print('mounted {0} on {1}'.format(device,mount_point))
 
-    fstab_entry = '{0}  {1} {2} default 0 0'.format(device,mount_point,fstype)
+    fstab_entry = '{0}  {1} {2} defaults 0 0'.format(device + '1',mount_point,fstype)
     with open('/etc/fstab','a') as fstab_file:
         fstab_file.write('\n' + fstab_entry)
 
