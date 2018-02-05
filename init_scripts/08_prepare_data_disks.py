@@ -19,7 +19,10 @@ if __name__ == '__main__':
     mount_point = '/datadisks/disk1'
     fstype = 'ext4'
 
-    subprocess.check_output(['parted', device, 'mklabel', 'gpt', 'mkpart', 'primary', 'ext2', '0%', '100%'])
+    # they seem to start off mounted so unmount first
+    subprocess.call(['umount', device + '1'])
+
+    subprocess.check_output(['parted', '-s', device, 'mklabel', 'gpt', 'mkpart', 'primary', 'ext2', '0%', '100%'])
     print('partitioned {0}'.format(device))
 
     # wait for /dev/sdc1 to be created
