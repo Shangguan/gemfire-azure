@@ -16,8 +16,8 @@ def validate_env():
 
 if __name__ == '__main__':
     """
-    This script places a cluster definition and the gemfire-manager cluster
-    control scripts in /home/$GEMFIRE_USER/gemfire_cluster
+    This script starts the first locator and imports the initial cluster
+    configuration
 
     This script expects the following environment variables
     GEMFIRE_USER the user that will run the GemFire processes
@@ -36,7 +36,8 @@ if __name__ == '__main__':
         java_home = '/etc/alternatives/java_sdk'
         gemfire = '/usr/local/gemfire'
 
-        rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
+        rc = subprocess.call(['systemctl','start','gemfire.service'] )
+        #rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
         if (rc == 0):
             print('First locator started')
         else:
