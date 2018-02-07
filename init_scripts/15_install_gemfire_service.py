@@ -37,5 +37,5 @@ if __name__ == '__main__':
     with open(target,'w') as f:
         tplate.stream(context).dump(f)
 
-    // install the service
+    # install the service
     subprocess.check_call(['systemctl','enable','gemfire.service'])
