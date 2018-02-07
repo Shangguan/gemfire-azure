@@ -30,7 +30,7 @@ if __name__ == '__main__':
     context['RunAsUser'] = runAsUser
 
     # render the template
-    jinja2Env = jinja2.Environment(loader = jinja2.FileSystemLoader('/home/{0}/gemfire-azure/init_scripts'.format(run_as_user)), trim_blocks = True, lstrip_blocks = True)
+    jinja2Env = jinja2.Environment(loader = jinja2.FileSystemLoader('/home/{0}/gemfire-azure/init_scripts'.format(runAsUser)), trim_blocks = True, lstrip_blocks = True)
 
     tplate = jinja2Env.get_template('gemfire.service.tpl')
     target = '/etc/systemd/system/gemfire.service'
