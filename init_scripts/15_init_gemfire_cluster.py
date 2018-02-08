@@ -85,9 +85,7 @@ if __name__ == '__main__':
     gfsh = os.path.join(gemfire,'bin','gfsh')
     zipfile_name = os.path.join('/home',gemuser,'gemfire-azure','init_scripts','cluster.zip')
 
-    subprocess.call([gfsh,'-e','connect --locator=localhost[{0}] --user={1} --password={2}'.format(locator_port, 'gfpeer', gemfireSuperUserPassword), '-e','import cluster-configuration --zip-file-name={0}'.format(zipfile_name)])
-    # TODO - it appears gfsh does not return a non-zero error code when this
-    #        command fails. Investigate and log a ticket
+    rc = subprocess.call([gfsh,'-e','connect --locator=localhost[{0}] --user={1} --password={2}'.format(locator_port, 'gfpeer', gemfireSuperUserPassword), '-e','import cluster-configuration --zip-file-name={0}'.format(zipfile_name)])
     if (rc == 0):
         print('initial cluster configuration imported')
     else:
