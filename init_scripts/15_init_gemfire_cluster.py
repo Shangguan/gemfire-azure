@@ -10,7 +10,7 @@ import sys
 import subprocess
 
 def validate_env():
-    for key in ['GEMFIRE_USER', 'CLUSTER_NAME']:
+    for key in ['GEMFIRE_USER', 'CLUSTER_NAME', 'GF_SUPERUSER_PASS']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
@@ -22,12 +22,14 @@ if __name__ == '__main__':
     This script expects the following environment variables
     GEMFIRE_USER the user that will run the GemFire processes
     CLUSTER_NAME the name of the cluster
+    GF_SUPERUSER_PASS  the password for the GemFire super user
     """
     validate_env()
 
     # parameters
     clusterName = os.environ['CLUSTER_NAME']
     gemuser = os.environ['GEMFIRE_USER']
+    gemfireSuperUserPassword = os.environ['GF_SUPERUSER_PASS']
 
     # check to see if we are the 0th host
     hostname = subprocess.check_output(['hostname']).strip()
@@ -57,7 +59,9 @@ if __name__ == '__main__':
     gfsh = os.path.join(gemfire,'bin','gfsh')
     zipfile_name = os.path.join('/home',gemuser,'gemfire-azure','init_scripts','cluster.zip')
 
-    subprocess.call([gfsh,'-e','connect --locator=localhost[{0}]'.format(locator_port), '-e','import cluster-configuration --zip-file-name={0}'.format(zipfile_name)])
+    subprocess.call([gfsh,'-e','connect --locator=localhost[{0}] --user={1} --password={2}'.format(locator_port, 'gfadmin', gemfireSuperUserPassword), '-e','import cluster-configuration --zip-file-name={0}'.format(zipfile_name)])
+    # TODO - it appears gfsh does not return a non-zero error code when this
+    #        command fails. Investigate and log a ticket
     if (rc == 0):
         print('initial cluster configuration imported')
     else:
