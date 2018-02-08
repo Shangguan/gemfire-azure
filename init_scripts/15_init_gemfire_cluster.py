@@ -33,7 +33,7 @@ def install_systemd_service(runAsUser):
 
     # install the service
     subprocess.check_call(['systemctl','enable','gemfire.service'])
-    print 'installed systemd service for gemfire'
+    print('installed systemd service for gemfire')
 
 if __name__ == '__main__':
     """
