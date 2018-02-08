@@ -18,7 +18,7 @@ def total_mem_megs():
 
 
 def validate_env():
-    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME',  'CLUSTER_NAME']:
+    for key in ['GEMFIRE_USER','LOCATOR_COUNT','DATANODE_COUNT','REGION_NAME',  'CLUSTER_NAME', 'GF_SUPERUSER_PASS']:
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
@@ -83,6 +83,7 @@ if __name__ == '__main__':
     DATANODE_COUNT the  number of data nodes in this cluster
     REGION_NAME the Azure region where this cluster is deployed
     CLUSTER_NAME the name of the cluster
+	GF_SUPERUSER_PASS  the password for the GemFire super user
     """
     validate_env()
 
