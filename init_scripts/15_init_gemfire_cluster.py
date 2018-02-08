@@ -14,10 +14,31 @@ def validate_env():
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
+def install_systemd_service(runAsUser)
+    """
+    This function installs systemd unit to start and stop the
+    GemFire cluster when the machine is started and stopped.
+    """
+    # set up the jinja2 template environment
+    context = dict()
+    context['RunAsUser'] = runAsUser
+
+    # render the template
+    jinja2Env = jinja2.Environment(loader = jinja2.FileSystemLoader('/home/{0}/gemfire-azure/init_scripts'.format(runAsUser)), trim_blocks = True, lstrip_blocks = True)
+
+    tplate = jinja2Env.get_template('gemfire.service.tpl')
+    target = '/etc/systemd/system/gemfire.service'
+    with open(target,'w') as f:
+        tplate.stream(context).dump(f)
+
+    # install the service
+    subprocess.check_call(['systemctl','enable','gemfire.service'])
+    print 'installed systemd service for gemfire'
+
 if __name__ == '__main__':
     """
     This script starts the first locator and imports the initial cluster
-    configuration
+    configuration.  It also installs the systemd service
 
     This script expects the following environment variables
     GEMFIRE_USER the user that will run the GemFire processes
@@ -31,6 +52,9 @@ if __name__ == '__main__':
     gemuser = os.environ['GEMFIRE_USER']
     gemfireSuperUserPassword = os.environ['GF_SUPERUSER_PASS']
 
+    # install systemd
+    install_systemd_service(gemuser)
+
     # check to see if we are the 0th host
     hostname = subprocess.check_output(['hostname']).strip()
     if hostname == clusterName + '0':
@@ -38,7 +62,9 @@ if __name__ == '__main__':
         java_home = '/etc/alternatives/java_sdk'
         gemfire = '/usr/local/gemfire'
 
-        rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
+        subprocess.check_call(['systemctl','start','gemfire.service'])
+        print 'started gemfire'
+        #rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
 
         if (rc == 0):
             print('First locator started')

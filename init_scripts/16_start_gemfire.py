@@ -54,11 +54,6 @@ if __name__ == '__main__':
 
         waitforprimary()
 
-        rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
-
-        if (rc == 0):
-            print('GemFire cluster started')
-        else:
-            print('GemFire cluster failed to start')
-
-        sys.exit(rc)
+        subprocess.check_call(['systemctl','start','gemfire.service'])
+        #rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
+        print('GemFire cluster started')
