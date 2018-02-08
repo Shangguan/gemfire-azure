@@ -63,14 +63,14 @@ if __name__ == '__main__':
         gemfire = '/usr/local/gemfire'
 
         subprocess.check_call(['systemctl','start','gemfire.service'])
-        print('started gemfire')
+        print('started locator')
         #rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
 
-        if (rc == 0):
-            print('First locator started')
-        else:
-            print('First locator failed to start')
-            sys.exit(-1)
+        # if (rc == 0):
+        #     print('First locator started')
+        # else:
+        #     print('First locator failed to start')
+        #     sys.exit(-1)
 
     else:
         print('nothing to do for init_gemfire_cluster on this server')
