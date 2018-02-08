@@ -56,12 +56,6 @@ if __name__ == '__main__':
 
         rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
 
-        # Start the systemd service just so systemd will know the service is
-        # running and will stop it if the box is shut down.  Note that starting
-        # only the systemd service causes problems with sequencing during the
-        # initial startup
-        subprocess.call(['systemctl','start','gemfire.service'])
-
         if (rc == 0):
             print('GemFire cluster started')
         else:
