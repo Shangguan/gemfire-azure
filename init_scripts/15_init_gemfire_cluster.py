@@ -14,7 +14,7 @@ def validate_env():
         if key not in os.environ:
             sys.exit('A required environment variable is not present: ' + key)
 
-def install_systemd_service(runAsUser)
+def install_systemd_service(runAsUser):
     """
     This function installs systemd unit to start and stop the
     GemFire cluster when the machine is started and stopped.
