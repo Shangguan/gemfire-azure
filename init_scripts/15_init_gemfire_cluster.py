@@ -63,7 +63,7 @@ if __name__ == '__main__':
         gemfire = '/usr/local/gemfire'
 
         subprocess.check_call(['systemctl','start','gemfire.service'])
-        print 'started gemfire'
+        print('started gemfire')
         #rc = subprocess.call(['sudo','-u',gemuser, 'GEMFIRE={0}'.format(gemfire),'JAVA_HOME={0}'.format(java_home), 'python', 'cluster.py','start'], cwd=cluster_home)
 
         if (rc == 0):
