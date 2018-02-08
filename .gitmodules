@@ -4,6 +4,3 @@
 [submodule "gemfire-dynamic-security"]
 	path = gemfire-dynamic-security
 	url = https://github.com/Pivotal-Data-Engineering/gemfire-dynamic-security.git
-[submodule "test/people-loader"]
-	path = test/people-loader
-	url = git@github.com:Pivotal-Data-Engineering/people-loader.git
