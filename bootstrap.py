@@ -50,7 +50,7 @@ def run(cmd, log, wd = None):
             rc = process.returncode
             if rc == 0:
                 break
-        except as x:
+        except Exception as x:
             log.write(logmsg('An error occurred while running "{0}". The error was "{1}". The command will be retried {2} more {3}.'.format(cmd,x,attempts_remaining,'times' if attempts_remaining > 1 else 'time')))
 
     if rc != 0:
