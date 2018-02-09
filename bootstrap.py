@@ -43,7 +43,7 @@ def run(cmd, log, wd = None):
     """
     attempts = 2
     rc = 1
-    for attempts_remaining in range(attempts).reversed():
+    for attempts_remaining in range(attempts -1,-1,-1):
         try:
             process = subprocess.Popen(cmd.split(), stdout=log,stderr = subprocess.STDOUT, cwd=wd)
             out, err = process.communicate()
