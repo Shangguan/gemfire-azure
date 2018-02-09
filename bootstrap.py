@@ -38,9 +38,22 @@ def validate_env(log):
         raise AbortBootstrap()
 
 def run(cmd, log, wd = None):
-    process = subprocess.Popen(cmd.split(), stdout=log,stderr = subprocess.STDOUT, cwd=wd)
-    out, err = process.communicate()
-    if process.returncode != 0:
+    """
+    this method will retry failed scripts one time
+    """
+    attempts = 2
+    rc = 1
+    for attempts_remaining in range(attempts).reversed():
+        try:
+            process = subprocess.Popen(cmd.split(), stdout=log,stderr = subprocess.STDOUT, cwd=wd)
+            out, err = process.communicate()
+            rc = process.returncode
+            if rc == 0:
+                break
+        except as x:
+            log.write(logmsg('An error occurred while running "{0}". The error was "{1}". The command will be retried {2} more {3}.'.format(cmd,x,attempts_remaining,'times' if attempts_remaining > 1 else 'time')))
+
+    if rc != 0:
         raise AbortBootstrap()
 
 def setup_git(owner, branch, log):
