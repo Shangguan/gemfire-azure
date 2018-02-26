@@ -35,7 +35,8 @@ if __name__ == '__main__':
     subprocess.check_call(['mount','-t',fstype,device + '1',mount_point])
     print('mounted {0} on {1}'.format(device,mount_point))
 
-    fstab_entry = '{0}  {1} {2} defaults 0 0'.format(device + '1',mount_point,fstype)
+    uuid = subprocess.check_output(['sudo', 'blkid', '-o', 'value',  '-s', 'UUID' , device + '1']).strip()
+    fstab_entry = 'UUID={0}  {1} {2} defaults,nofail 0 0\n'.format(uuid,mount_point,fstype)
     with open('/etc/fstab','a') as fstab_file:
         fstab_file.write('\n' + fstab_entry)
 
