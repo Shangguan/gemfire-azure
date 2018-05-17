@@ -46,7 +46,7 @@ yum localinstall -y jdk-8u144-linux-x64.rpm
 rm -f jdk-8u102-linux-x64.rpm
 
 echo "installing Gemfire software ........"
-wget https://gemfirestgacct01.blob.core.windows.net/binaries/pivotal-gemfire-9.1.1.tar.gz
+wget https://s3.amazonaws.com/gemfire-bootstrap/pivotal-gemfire-9.1.1.tar.gz
 tar -xvf pivotal-gemfire-9.1.1.tar.gz
 mv pivotal-gemfire-9.1.1 /usr/local/
 ln -s /usr/local/pivotal-gemfire-9.1.1/ /usr/local/gemfire
