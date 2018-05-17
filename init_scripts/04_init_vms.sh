@@ -46,10 +46,10 @@ yum localinstall -y jdk-8u144-linux-x64.rpm
 rm -f jdk-8u102-linux-x64.rpm
 
 echo "installing Gemfire software ........"
-wget https://s3.amazonaws.com/gemfire-bootstrap/pivotal-gemfire-9.1.1.tar.gz
-tar -xvf pivotal-gemfire-9.1.1.tar.gz
-mv pivotal-gemfire-9.1.1 /usr/local/
-ln -s /usr/local/pivotal-gemfire-9.1.1/ /usr/local/gemfire
+wget https://s3.amazonaws.com/gemfire-bootstrap/pivotal-gemfire-9.5.0.tgz
+tar -xvf pivotal-gemfire-9.5.0.tgz
+mv pivotal-gemfire-9.5.0 /usr/local/
+ln -s /usr/local/pivotal-gemfire-9.5.0/ /usr/local/gemfire
 chown -R $GEMFIRE_USER:$GEMFIRE_USER /usr/local/gemfire
 
 echo export JAVA_HOME=/usr/java/jdk1.8.0_144 >> /home/$GEMFIRE_USER/.bashrc
